@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — fresh emerald primary + deep forest-green accent */
+  --color-coral-50: #eafaf1;
+  --color-coral-100: #cdefdd;
+  --color-coral-200: #9fdcbd;
+  --color-coral-300: #63c497;
+  --color-coral-400: #34ad78;
+  --color-coral-500: #1f9d68;
+  --color-coral-600: #157a50;
+  --color-coral-700: #0f5f3e;
+
+  --color-plum-50: #eef5f0;
+  --color-plum-100: #d6e8dc;
+  --color-plum-200: #adceb9;
+  --color-plum-400: #4f8f6b;
+  --color-plum-600: #2c6b48;
+  --color-plum-700: #1d5136;
+  --color-plum-800: #143a27;
+  --color-plum-900: #0d2a1c;
+
+  --color-cream-50: #f4faf6;
+  --color-cream-100: #e7f4ec;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-display), var(--font-inter), system-ui, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #10241b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utility: brand gradient text */
+.text-gradient-coral {
+  background: linear-gradient(90deg, #1f9d68 0%, #34ad78 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease-out both;
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-floaty {
+  animation: floaty 4s ease-in-out infinite;
+}
+
+/* Custom scrollbar for booking modal */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #9fdcbd;
+  border-radius: 9999px;
+}
