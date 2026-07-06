@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Stats from "@/components/Stats";
 import Treatments from "@/components/Treatments";
+import Panchkarma from "@/components/Panchkarma";
 import Doctor from "@/components/Doctor";
 import WhyUs from "@/components/WhyUs";
 import Comparison from "@/components/Comparison";
@@ -18,6 +19,7 @@ export default function Home() {
         <Hero />
         <Stats />
         <Treatments />
+        <Panchkarma />
         <Doctor />
         <WhyUs />
         <Comparison />
