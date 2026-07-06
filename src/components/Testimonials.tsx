@@ -1,59 +1,61 @@
-const reviews = [
-  {
-    name: "Pooja & Rahul",
-    initial: "P",
-    color: "#1f9d68",
-    tag: "Conceived via IUI",
-    text: "We were told to go straight for IVF by another clinic. At Sai Healthcare, Dr. Sharma actually ran the tests and found it was a simple hormonal issue. We conceived on the second cycle. Forever grateful.",
+"use client";
+
+import { useT } from "./LanguageProvider";
+
+const colors = ["#1f9d68", "#2c6b48", "#0f5f3e", "#34ad78"];
+
+const content = {
+  en: {
+    eyebrow: "Real stories from Raipur",
+    titleA: "Families who found their",
+    titleB: "happy ending",
+    ratingNote: "· Trusted by 1,000+ families",
+    reviews: [
+      { name: "Pooja & Rahul", initial: "P", tag: "Conceived after Panchkarma", text: "After 4 years and countless tests elsewhere, Dr. Soni found a Vata imbalance no one had checked. Three months of Panchkarma and we conceived naturally. No IVF, no side effects." },
+      { name: "Swati Verma", initial: "S", tag: "PCOS treated naturally", text: "My PCOS made everything unpredictable. The herbal medicines and Virechana therapy balanced my cycles within months, and I'm now pregnant. I only wish I'd come here first." },
+      { name: "Reshma & Anil", initial: "R", tag: "Male infertility", text: "Everyone kept testing my wife. Here Dr. Soni checked me too and treated low sperm count with Rasayana herbs. Our son is now one year old. Forever grateful." },
+      { name: "Aishwarya M.", initial: "A", tag: "Uttar Basti therapy", text: "I was told IVF was my only option. Dr. Soni was honest and gentle — Uttar Basti and a proper diet plan changed everything. Six months pregnant and so thankful." },
+    ],
   },
-  {
-    name: "Swati Verma",
-    initial: "S",
-    color: "#2c6b48",
-    tag: "PCOS · natural conception",
-    text: "PCOS made my cycles unpredictable for years. Three months of ovulation induction with the right diet plan, and I was pregnant naturally. I only wish I had come here sooner.",
+  hi: {
+    eyebrow: "रायपुर से सच्ची कहानियाँ",
+    titleA: "जिन परिवारों को मिली",
+    titleB: "खुशियों की सौगात",
+    ratingNote: "· 1,000+ परिवारों का विश्वास",
+    reviews: [
+      { name: "पूजा व राहुल", initial: "P", tag: "पंचकर्म के बाद गर्भधारण", text: "4 वर्ष और कई जगह जाँचों के बाद, डॉ. सोनी ने एक वात असंतुलन पकड़ा जिसे किसी ने नहीं देखा था। तीन महीने के पंचकर्म से हमने प्राकृतिक रूप से गर्भधारण किया। न IVF, न कोई दुष्प्रभाव।" },
+      { name: "स्वाति वर्मा", initial: "S", tag: "PCOS का प्राकृतिक उपचार", text: "मेरे PCOS ने सब अनिश्चित कर दिया था। हर्बल औषधियों और विरेचन चिकित्सा ने कुछ ही महीनों में मेरे चक्र संतुलित कर दिए, और अब मैं गर्भवती हूँ। काश मैं पहले यहीं आती।" },
+      { name: "रेशमा व अनिल", initial: "R", tag: "पुरुष निःसंतानता", text: "सब मेरी पत्नी की ही जाँच करते रहे। यहाँ डॉ. सोनी ने मेरी भी जाँच की और रसायन औषधियों से शुक्राणु की कमी का उपचार किया। हमारा बेटा अब एक वर्ष का है। हम सदा आभारी हैं।" },
+      { name: "ऐश्वर्या एम.", initial: "A", tag: "उत्तर बस्ति चिकित्सा", text: "मुझे बताया गया कि IVF ही एकमात्र विकल्प है। डॉ. सोनी ईमानदार और सौम्य रहे — उत्तर बस्ति और सही आहार योजना ने सब बदल दिया। छह महीने की गर्भवती हूँ और बहुत आभारी।" },
+    ],
   },
-  {
-    name: "Reshma & Anil",
-    initial: "R",
-    color: "#0f5f3e",
-    tag: "Male factor infertility",
-    text: "Everyone kept pushing my wife for tests. Here they checked me too — a simple semen analysis found the real issue. A short treatment later, our son is now 1 year old.",
-  },
-  {
-    name: "Aishwarya M.",
-    initial: "A",
-    color: "#34ad78",
-    tag: "Low AMH · conceived via IVF",
-    text: "With low AMH at 34, other places said IVF or nothing. The team here was honest about my real chances. Two cycles of IVF and I'm 6 months pregnant. The transparency meant everything.",
-  },
-];
+};
 
 function Stars() {
   return <span className="text-amber-400 text-sm">★★★★★</span>;
 }
 
 export default function Testimonials() {
+  const c = useT(content);
   return (
     <section id="stories" className="bg-gradient-to-b from-white to-plum-50">
       <div className="mx-auto max-w-6xl px-4 py-16 md:py-24">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-plum-600">
-            Real stories from Raipur
+            {c.eyebrow}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-plum-900 sm:text-4xl">
-            Families who found their{" "}
-            <span className="text-gradient-coral">happy ending</span>
+            {c.titleA} <span className="text-gradient-coral">{c.titleB}</span>
           </h2>
           <div className="mt-4 flex items-center justify-center gap-2 text-sm">
             <Stars />
-            <span className="font-bold text-plum-900">4.9</span>
-            <span className="text-plum-900/55">· 1,800+ verified Google reviews</span>
+            <span className="font-bold text-plum-900">4.8</span>
+            <span className="text-plum-900/55">{c.ratingNote}</span>
           </div>
         </div>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {reviews.map((r) => (
+          {c.reviews.map((r, i) => (
             <div
               key={r.name}
               className="rounded-2xl border border-plum-100 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-plum-500/5"
@@ -62,7 +64,7 @@ export default function Testimonials() {
                 <div className="flex items-center gap-3">
                   <span
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full font-display text-lg font-bold text-white"
-                    style={{ background: r.color }}
+                    style={{ background: colors[i] }}
                   >
                     {r.initial}
                   </span>
@@ -75,9 +77,7 @@ export default function Testimonials() {
                   {r.tag}
                 </span>
               </div>
-              <p className="mt-4 text-sm leading-relaxed text-plum-900/70">
-                &ldquo;{r.text}&rdquo;
-              </p>
+              <p className="mt-4 text-sm leading-relaxed text-plum-900/70">&ldquo;{r.text}&rdquo;</p>
             </div>
           ))}
         </div>

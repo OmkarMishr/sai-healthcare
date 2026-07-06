@@ -3,16 +3,62 @@
 import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import { useBooking } from "./BookingProvider";
+import { useLanguage, useT } from "./LanguageProvider";
 
-const links = [
-  { label: "Your Path", href: "#treatments" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "Success Stories", href: "#stories" },
-  { label: "FAQs", href: "#faq" },
-];
+const content = {
+  en: {
+    announce: "Now booking this week — Consult Dr. S.S. Soni · 20 years in Ayurvedic infertility care",
+    links: [
+      { label: "Treatments", href: "#treatments" },
+      { label: "Dr. Soni", href: "#doctor" },
+      { label: "Why Us", href: "#why-us" },
+      { label: "Stories", href: "#stories" },
+      { label: "FAQs", href: "#faq" },
+    ],
+    book: "Book Appointment",
+  },
+  hi: {
+    announce: "इस सप्ताह अपॉइंटमेंट बुक करें — डॉ. एस.एस. सोनी से परामर्श · आयुर्वेदिक निःसंतानता में 20 वर्षों का अनुभव",
+    links: [
+      { label: "उपचार", href: "#treatments" },
+      { label: "डॉ. सोनी", href: "#doctor" },
+      { label: "क्यों चुनें", href: "#why-us" },
+      { label: "अनुभव", href: "#stories" },
+      { label: "सामान्य प्रश्न", href: "#faq" },
+    ],
+    book: "अपॉइंटमेंट बुक करें",
+  },
+};
+
+function LangToggle() {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div className="flex items-center rounded-full border border-plum-200 bg-white p-0.5 text-xs font-bold">
+      <button
+        onClick={() => setLang("en")}
+        className={`rounded-full px-2.5 py-1 transition-colors ${
+          lang === "en" ? "bg-coral-500 text-white" : "text-plum-900/60"
+        }`}
+        aria-pressed={lang === "en"}
+      >
+        EN
+      </button>
+      <button
+        onClick={() => setLang("hi")}
+        className={`rounded-full px-2.5 py-1 transition-colors ${
+          lang === "hi" ? "bg-coral-500 text-white" : "text-plum-900/60"
+        }`}
+        aria-pressed={lang === "hi"}
+      >
+        हिं
+      </button>
+    </div>
+  );
+}
 
 export default function Navbar() {
   const { open } = useBooking();
+  const c = useT(content);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -29,7 +75,7 @@ export default function Navbar() {
       <div className="bg-gradient-to-r from-coral-500 via-coral-400 to-coral-500 text-white">
         <p className="mx-auto flex max-w-6xl items-center justify-center gap-2 px-4 py-2 text-center text-[13px] font-medium">
           <span className="animate-floaty">✦</span>
-          Limited slots this week — Free first consultation with a senior fertility specialist
+          {c.announce}
         </p>
       </div>
 
@@ -42,12 +88,12 @@ export default function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <a href="#top" aria-label="Sai Healthcare home">
+          <a href="#top" aria-label="Shri Sai Ayurveda home">
             <Logo />
           </a>
 
-          <div className="hidden items-center gap-8 md:flex">
-            {links.map((l) => (
+          <div className="hidden items-center gap-7 md:flex">
+            {c.links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
@@ -59,17 +105,12 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-3">
-            <a
-              href="tel:+917712000000"
-              className="hidden text-sm font-semibold text-plum-900 lg:block"
-            >
-              +91 771 200 0000
-            </a>
+            <LangToggle />
             <button
               onClick={() => open()}
-              className="rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95"
+              className="hidden rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 sm:block"
             >
-              Book Appointment
+              {c.book}
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
@@ -91,7 +132,7 @@ export default function Navbar() {
         {menuOpen && (
           <div className="border-t border-coral-100 bg-white px-4 py-3 md:hidden">
             <div className="flex flex-col gap-1">
-              {links.map((l) => (
+              {c.links.map((l) => (
                 <a
                   key={l.href}
                   href={l.href}
@@ -101,11 +142,20 @@ export default function Navbar() {
                   {l.label}
                 </a>
               ))}
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  open();
+                }}
+                className="mt-1 rounded-lg bg-coral-500 px-3 py-2.5 text-left text-sm font-semibold text-white"
+              >
+                {c.book}
+              </button>
               <a
-                href="tel:+917712000000"
+                href="tel:+919770130255"
                 className="rounded-lg px-3 py-2.5 text-sm font-semibold text-coral-600"
               >
-                📞 +91 771 200 0000
+                📞 097701 30255
               </a>
             </div>
           </div>

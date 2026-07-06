@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { BookingProvider } from "@/components/BookingProvider";
+import { LanguageProvider } from "@/components/LanguageProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -17,14 +18,15 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Sai Healthcare — Fertility & IVF Centre, Raipur",
+  title: "Shri Sai Ayurveda — Panchkarma & Infertility Clinic, Raipur",
   description:
-    "Raipur's trusted fertility & infertility care. Personalised diagnosis, senior specialists, and a natural-first path to parenthood. Book a free consultation today.",
+    "Raipur's trusted Ayurvedic Panchkarma & infertility clinic led by Dr. S.S. Soni (BAMS, MD, Ph.D.). Natural, root-cause treatment for male & female infertility — no IVF. Book a consultation today.",
   keywords: [
-    "fertility clinic Raipur",
-    "IVF centre Raipur",
-    "infertility treatment Chhattisgarh",
-    "Sai Healthcare",
+    "Ayurvedic infertility treatment Raipur",
+    "Panchkarma clinic Raipur",
+    "Dr. S.S. Soni",
+    "Shri Sai Ayurveda",
+    "natural infertility treatment Chhattisgarh",
   ],
   icons: {
     icon: "/favicon.svg",
@@ -42,7 +44,9 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-white text-[#10241b]">
-        <BookingProvider>{children}</BookingProvider>
+        <LanguageProvider>
+          <BookingProvider>{children}</BookingProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

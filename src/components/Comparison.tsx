@@ -1,16 +1,50 @@
 "use client";
 
 import { useBooking } from "./BookingProvider";
+import { useT } from "./LanguageProvider";
 
-const rows = [
-  { param: "Diagnosis", us: "Real tests, real cause", them: "One remedy for everyone" },
-  { param: "Doctor Access", us: "Senior specialist, first call", them: "Chemist or agent, no doctor" },
-  { param: "Treatment Plan", us: "Custom plan for your body", them: "Same course for PCOS, low AMH, all" },
-  { param: "Male Partner Care", us: "Semen analysis included", them: "Female-only focus" },
-  { param: "If First Step Fails", us: "Step up to IUI / IVF in-house", them: "You start over elsewhere" },
-  { param: "Time to Pregnancy", us: "Targeted protocol, faster results", them: "6–12 months, often unsuccessful" },
-  { param: "Cost Transparency", us: "Clear costs, no upselling", them: "Recurring monthly charges" },
-];
+const content = {
+  en: {
+    eyebrow: "How we compare",
+    titleA: "Holistic Ayurveda vs.",
+    titleB: "Quick-Fix Treatments",
+    sub: "Why treating the root cause works better — and lasts longer — than masking the symptom.",
+    us: "Shri Sai Ayurveda",
+    usSub: "Panchkarma & Herbs",
+    them: "Symptomatic Care",
+    themSub: "Pills & Procedures",
+    param: "Parameter",
+    rows: [
+      { param: "Approach", us: "Treats the root cause (dosha balance)", them: "Masks the symptom only" },
+      { param: "Method", us: "Natural Panchkarma & herbs", them: "Hormones or invasive procedures" },
+      { param: "Side Effects", us: "None — gentle & safe", them: "Common and often harsh" },
+      { param: "Both Partners", us: "Male & female both treated", them: "Usually female-only focus" },
+      { param: "Whole-Body Health", us: "Restores overall wellness", them: "Temporary, isolated relief" },
+      { param: "Cost", us: "Affordable, transparent", them: "Expensive, repeated cycles" },
+    ],
+    cta: "📞 Consult Dr. Soni — Free",
+  },
+  hi: {
+    eyebrow: "हमारी तुलना",
+    titleA: "समग्र आयुर्वेद बनाम",
+    titleB: "तात्कालिक उपचार",
+    sub: "मूल कारण का उपचार, लक्षण छिपाने की तुलना में क्यों बेहतर — और अधिक टिकाऊ — है।",
+    us: "श्री साई आयुर्वेद",
+    usSub: "पंचकर्म व औषधियाँ",
+    them: "लक्षणात्मक उपचार",
+    themSub: "गोलियाँ व प्रक्रियाएँ",
+    param: "मापदंड",
+    rows: [
+      { param: "दृष्टिकोण", us: "मूल कारण का उपचार (दोष संतुलन)", them: "केवल लक्षण छिपाना" },
+      { param: "विधि", us: "प्राकृतिक पंचकर्म व औषधियाँ", them: "हार्मोन या इनवेसिव प्रक्रियाएँ" },
+      { param: "दुष्प्रभाव", us: "कोई नहीं — कोमल व सुरक्षित", them: "आम और अक्सर कठोर" },
+      { param: "दोनों साथी", us: "पुरुष व स्त्री दोनों का उपचार", them: "प्रायः केवल स्त्री पर केंद्रित" },
+      { param: "संपूर्ण स्वास्थ्य", us: "समग्र स्वास्थ्य की पुनर्स्थापना", them: "अस्थायी, सीमित राहत" },
+      { param: "लागत", us: "किफायती, पारदर्शी", them: "महँगे, बार-बार के चक्र" },
+    ],
+    cta: "📞 डॉ. सोनी से परामर्श — नि:शुल्क",
+  },
+};
 
 function Check() {
   return (
@@ -31,49 +65,43 @@ function Cross() {
 
 export default function Comparison() {
   const { open } = useBooking();
+  const c = useT(content);
   return (
     <section className="bg-white">
       <div className="mx-auto max-w-5xl px-4 py-16 md:py-24">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-coral-500">
-            How we compare
+            {c.eyebrow}
           </p>
           <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-plum-900 sm:text-4xl">
-            Real Fertility Care vs.{" "}
-            <span className="text-gradient-coral">Quick-Fix Tablets</span>
+            {c.titleA} <span className="text-gradient-coral">{c.titleB}</span>
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-plum-900/65">
-            Why a senior specialist beats a one-size-fits-all supplement — every time.
-          </p>
+          <p className="mt-4 text-[15px] leading-relaxed text-plum-900/65">{c.sub}</p>
         </div>
 
         <div className="mt-12 overflow-x-auto">
           <div className="min-w-[560px] overflow-hidden rounded-3xl border border-plum-100 shadow-sm">
-            {/* header */}
             <div className="grid grid-cols-[1.2fr_1fr_1fr]">
               <div className="bg-plum-50 px-5 py-4 text-xs font-bold uppercase tracking-wider text-plum-600">
-                Parameter
+                {c.param}
               </div>
               <div className="bg-gradient-to-br from-coral-500 to-coral-600 px-5 py-4 text-center">
-                <p className="font-display text-sm font-bold text-white">Sai Healthcare</p>
-                <p className="text-[11px] font-medium text-coral-100">Senior Specialists</p>
+                <p className="font-display text-sm font-bold text-white">{c.us}</p>
+                <p className="text-[11px] font-medium text-coral-100">{c.usSub}</p>
               </div>
               <div className="bg-plum-50 px-5 py-4 text-center">
-                <p className="font-display text-sm font-bold text-plum-900/70">Tablet Remedies</p>
-                <p className="text-[11px] font-medium text-plum-900/45">Over-the-counter</p>
+                <p className="font-display text-sm font-bold text-plum-900/70">{c.them}</p>
+                <p className="text-[11px] font-medium text-plum-900/45">{c.themSub}</p>
               </div>
             </div>
-            {/* rows */}
-            {rows.map((r, i) => (
+            {c.rows.map((r, i) => (
               <div
                 key={r.param}
                 className={`grid grid-cols-[1.2fr_1fr_1fr] items-center ${
                   i % 2 ? "bg-cream-50" : "bg-white"
                 }`}
               >
-                <div className="px-5 py-4 text-sm font-semibold text-plum-900">
-                  {r.param}
-                </div>
+                <div className="px-5 py-4 text-sm font-semibold text-plum-900">{r.param}</div>
                 <div className="flex items-center gap-2 border-x border-coral-100/60 bg-coral-50/40 px-5 py-4 text-sm text-plum-900/80">
                   <Check />
                   <span>{r.us}</span>
@@ -92,7 +120,7 @@ export default function Comparison() {
             onClick={() => open()}
             className="rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-coral-500/30 transition-transform hover:scale-[1.03] active:scale-95"
           >
-            📞 Talk to a real doctor — Free
+            {c.cta}
           </button>
         </div>
       </div>
