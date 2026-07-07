@@ -7,13 +7,13 @@ const content = {
     { value: "20+", label: "Years of Experience" },
     { value: "1,000+", label: "Couples Helped" },
     { value: "100%", label: "Natural & Herbal" },
-    { value: "4.8★", label: "Patient Rating" },
+    { value: "5.0★", label: "Google Rating · 203" },
   ],
   hi: [
     { value: "20+", label: "वर्षों का अनुभव" },
     { value: "1,000+", label: "दंपतियों की सहायता" },
     { value: "100%", label: "प्राकृतिक व हर्बल" },
-    { value: "4.8★", label: "रोगी रेटिंग" },
+    { value: "5.0★", label: "गूगल रेटिंग · 203" },
   ],
 };
 

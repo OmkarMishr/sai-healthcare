@@ -102,29 +102,29 @@ export default function Navbar() {
           scrolled ? "border-coral-100 bg-white/90 shadow-sm backdrop-blur" : "border-transparent bg-white"
         }`}
       >
-        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
-          <a href="#top" aria-label="Shri Sai Ayurveda home">
+        <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+          <a href="#top" aria-label="Shri Sai Ayurveda home" className="shrink-0">
             <Logo />
           </a>
 
-          {/* Desktop links */}
-          <div className="hidden items-center gap-6 lg:flex">
+          {/* Desktop links — centered & balanced */}
+          <div className="hidden flex-1 items-center justify-center gap-6 xl:flex 2xl:gap-8">
             {c.links.map((l) =>
               l.children ? (
                 <div key={l.label} className="group relative">
                   <a
                     href={l.href}
-                    className="flex items-center gap-1 text-sm font-medium text-plum-900/80 transition-colors hover:text-coral-600"
+                    className="flex items-center gap-1 whitespace-nowrap text-sm font-medium text-plum-900/80 transition-colors hover:text-coral-600"
                   >
                     {l.label}
                     <span className="text-[10px]">▾</span>
                   </a>
-                  <div className="invisible absolute left-0 top-full z-10 min-w-44 translate-y-1 rounded-xl border border-plum-100 bg-white p-1.5 opacity-0 shadow-lg transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  <div className="invisible absolute left-1/2 top-full z-10 min-w-44 -translate-x-1/2 translate-y-1 rounded-xl border border-plum-100 bg-white p-1.5 opacity-0 shadow-lg transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                     {l.children.map((ch) => (
                       <a
                         key={ch.label}
                         href={ch.href}
-                        className="block rounded-lg px-3 py-2 text-sm font-medium text-plum-900/80 hover:bg-coral-50 hover:text-coral-600"
+                        className="block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-plum-900/80 hover:bg-coral-50 hover:text-coral-600"
                       >
                         {ch.label}
                       </a>
@@ -135,7 +135,7 @@ export default function Navbar() {
                 <a
                   key={l.label}
                   href={l.href}
-                  className="text-sm font-medium text-plum-900/80 transition-colors hover:text-coral-600"
+                  className="whitespace-nowrap text-sm font-medium text-plum-900/80 transition-colors hover:text-coral-600"
                 >
                   {l.label}
                 </a>
@@ -144,23 +144,23 @@ export default function Navbar() {
           </div>
 
           {/* Right cluster */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex shrink-0 items-center gap-2.5">
             <LangToggle />
             <Link
               href="/admin/login"
-              className="hidden rounded-full border border-plum-200 px-4 py-2 text-sm font-semibold text-plum-800 transition-colors hover:border-coral-300 hover:text-coral-600 lg:block"
+              className="hidden whitespace-nowrap rounded-full border border-plum-200 px-4 py-2 text-sm font-semibold text-plum-800 transition-colors hover:border-coral-300 hover:text-coral-600 xl:block"
             >
               {c.login}
             </Link>
             <button
               onClick={() => open()}
-              className="hidden rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 sm:block"
+              className="hidden whitespace-nowrap rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 sm:block"
             >
               {c.book}
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-plum-900 lg:hidden"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-plum-900 xl:hidden"
               aria-label="Toggle menu"
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
