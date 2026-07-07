@@ -6,10 +6,12 @@ import Panchkarma from "@/components/Panchkarma";
 import Doctor from "@/components/Doctor";
 import WhyUs from "@/components/WhyUs";
 import Comparison from "@/components/Comparison";
+import Insurance from "@/components/Insurance";
 import Testimonials from "@/components/Testimonials";
 import Faq from "@/components/Faq";
 import ClosingCta from "@/components/ClosingCta";
 import Footer from "@/components/Footer";
+import MobileActions from "@/components/MobileActions";
 
 export default function Home() {
   return (
@@ -23,11 +25,13 @@ export default function Home() {
         <Doctor />
         <WhyUs />
         <Comparison />
+        <Insurance />
         <Testimonials />
         <Faq />
         <ClosingCta />
       </main>
       <Footer />
+      <MobileActions />
     </>
   );
 }

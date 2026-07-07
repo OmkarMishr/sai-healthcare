@@ -2,90 +2,82 @@ import { NextResponse } from "next/server";
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
+import { isDbConfigured, query } from "@/lib/db";
 
-// Persist to a JSON file on the server so the clinic can see booking requests.
 export const runtime = "nodejs";
+
+// Public booking endpoint. Writes to Postgres when DATABASE_URL is set,
+// otherwise falls back to a local JSON file so the site works out of the box.
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const DATA_FILE = path.join(DATA_DIR, "appointments.json");
 
-type Appointment = {
-  id: string;
-  service: string;
-  serviceLabel: string;
-  date: string;
-  time: string;
-  name: string;
-  phone: string;
-  email: string;
-  notes: string;
-  createdAt: string;
-};
-
-async function readAll(): Promise<Appointment[]> {
+async function fileAppend(record: Record<string, unknown>) {
+  let list: unknown[] = [];
   try {
-    const raw = await fs.readFile(DATA_FILE, "utf8");
-    return JSON.parse(raw) as Appointment[];
+    list = JSON.parse(await fs.readFile(DATA_FILE, "utf8"));
   } catch {
-    return [];
+    list = [];
   }
-}
-
-async function writeAll(list: Appointment[]) {
+  list.push(record);
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(DATA_FILE, JSON.stringify(list, null, 2), "utf8");
 }
 
 export async function POST(req: Request) {
-  let body: Partial<Appointment>;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  const b = await req.json().catch(() => null);
+  if (!b) return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
 
-  const name = (body.name ?? "").toString().trim();
-  const phone = (body.phone ?? "").toString().trim();
-  const service = (body.service ?? "").toString().trim();
-  const date = (body.date ?? "").toString().trim();
-  const time = (body.time ?? "").toString().trim();
+  const name = (b.name ?? "").toString().trim();
+  const phone = (b.phone ?? "").toString().trim();
+  const date = (b.date ?? "").toString().trim();
+  const time = (b.time ?? "").toString().trim();
+  const service = (b.service ?? "").toString().trim();
 
-  // Server-side validation
-  if (!name || !service || !date || !time) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 },
-    );
+  if (!name || !date || !time) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
   if (!/^[+\d][\d\s-]{7,}$/.test(phone)) {
-    return NextResponse.json(
-      { error: "Invalid phone number" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
   }
 
-  const appointment: Appointment = {
-    id: randomUUID(),
-    service,
-    serviceLabel: (body.serviceLabel ?? "").toString().trim(),
-    date,
-    time,
-    name,
-    phone,
-    email: (body.email ?? "").toString().trim(),
-    notes: (body.notes ?? "").toString().trim(),
-    createdAt: new Date().toISOString(),
-  };
+  try {
+    if (isDbConfigured()) {
+      const rows = await query<{ id: string }>(
+        `INSERT INTO appointments
+           (service, service_label, appointment_date, appointment_time, name, phone, email, notes, status, source)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'pending','online')
+         RETURNING id`,
+        [
+          service || null,
+          (b.serviceLabel ?? "").toString().trim() || null,
+          date,
+          time,
+          name,
+          phone,
+          (b.email ?? "").toString().trim() || null,
+          (b.notes ?? "").toString().trim() || null,
+        ],
+      );
+      return NextResponse.json({ ok: true, id: rows[0].id }, { status: 201 });
+    }
 
-  const list = await readAll();
-  list.push(appointment);
-  await writeAll(list);
-
-  return NextResponse.json({ ok: true, id: appointment.id }, { status: 201 });
-}
-
-// Simple record retrieval so the clinic can review booking requests.
-export async function GET() {
-  const list = await readAll();
-  return NextResponse.json({ count: list.length, appointments: list });
+    const record = {
+      id: randomUUID(),
+      service,
+      serviceLabel: (b.serviceLabel ?? "").toString().trim(),
+      date,
+      time,
+      name,
+      phone,
+      email: (b.email ?? "").toString().trim(),
+      notes: (b.notes ?? "").toString().trim(),
+      createdAt: new Date().toISOString(),
+    };
+    await fileAppend(record);
+    return NextResponse.json({ ok: true, id: record.id }, { status: 201 });
+  } catch (err) {
+    console.error("Appointment save failed:", err);
+    return NextResponse.json({ error: "Could not save appointment" }, { status: 500 });
+  }
 }
