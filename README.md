@@ -58,9 +58,49 @@ npm run dev      # http://localhost:3000
 
 Visit `/admin/login`, click **Sign up** to create the first admin account, and you're in.
 
+## Booking notification email (EmailJS)
+
+The booking form sends a notification email to the clinic via **EmailJS** (client-side).
+Set `NEXT_PUBLIC_EMAILJS_*` in `.env.local` and paste
+[`email-templates/clinic-notification.html`](email-templates/clinic-notification.html)
+into your EmailJS template (HTML view). Template variables: `patient_name`,
+`patient_phone`, `patient_email`, `service`, `appointment_date`, `appointment_time`,
+`notes`, `meet_link`, `subject`. If unset, bookings still work — no email is sent.
+
+## Google Meet setup (optional)
+
+Each online booking can auto-create a **Google Meet** link (via Google Calendar API) that
+is emailed to the clinic. One-time setup:
+
+1. **console.cloud.google.com** → create a project → **Enable APIs** → enable *Google
+   Calendar API*.
+2. **OAuth consent screen** → External → add your Google account as a *Test user*.
+3. **Credentials** → *Create OAuth client ID* → type **Web application** → add redirect URI
+   `https://developers.google.com/oauthplayground` → copy the **Client ID + Secret**.
+4. Go to **developers.google.com/oauthplayground** → gear icon → tick *Use your own OAuth
+   credentials* → paste ID/secret → authorize scope
+   `https://www.googleapis.com/auth/calendar` → **Exchange authorization code for tokens** →
+   copy the **Refresh token**.
+5. Put them in `.env.local`:
+   ```
+   GOOGLE_CLIENT_ID=...
+   GOOGLE_CLIENT_SECRET=...
+   GOOGLE_REFRESH_TOKEN=...
+   GOOGLE_CALENDAR_ID=primary
+   ```
+
+If these are blank, the email uses a `meet.google.com/new` fallback link instead of a
+scheduled one.
+
+## Images to add
+
+- `public/dr-varsha.jpg` — Dr. Varsha Soni's photo (the two-doctor section expects it).
+- `public/gallery/*` — gallery photos (already added). To add more, drop the file in and
+  add one line to the `photos` array in `src/components/Gallery.tsx`.
+
 ## Notes
 
 - **Without `DATABASE_URL`** the public site still works — appointment bookings fall back
   to `data/appointments.json`. Admin features require Postgres.
 - Database schema lives in [`db/schema.sql`](db/schema.sql).
-- Out of scope: SMS/email/payment integrations, real insurance APIs.
+- Out of scope: SMS/payment integrations, real insurance APIs.

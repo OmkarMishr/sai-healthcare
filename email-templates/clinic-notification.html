@@ -1,0 +1,154 @@
+<!-- Shri Sai Ayurveda — EmailJS "New Appointment" template.
+     Paste this into the EmailJS template editor's HTML/Code view.
+     Variables used: patient_name, patient_phone, patient_email,
+     service, appointment_date, appointment_time, notes. -->
+<div style="margin:0;padding:0;background-color:#eef5f0;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef5f0;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 6px 24px rgba(13,42,28,0.12);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#0d2a1c;padding:28px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td>
+                    <div style="font-size:22px;font-weight:bold;color:#ffffff;letter-spacing:0.3px;">
+                      श्री Sai Ayurveda
+                    </div>
+                    <div style="font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#c9a24a;margin-top:4px;">
+                      Panchkarma &amp; Infertility · Raipur
+                    </div>
+                  </td>
+                  <td align="right" style="vertical-align:middle;">
+                    <div style="font-size:32px;line-height:1;">🌿</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Gold divider -->
+          <tr><td style="height:4px;background-color:#c9a24a;font-size:0;line-height:0;">&nbsp;</td></tr>
+
+          <!-- Title -->
+          <tr>
+            <td style="padding:28px 32px 8px 32px;">
+              <span style="display:inline-block;background-color:#eafaf1;color:#157a50;font-size:11px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:999px;">
+                New Appointment Request
+              </span>
+              <h1 style="margin:16px 0 4px 0;font-size:22px;color:#0d2a1c;font-weight:bold;">
+                {{patient_name}} wants to book a consultation
+              </h1>
+              <p style="margin:0;font-size:14px;color:#5b6b62;line-height:1.6;">
+                A new appointment request has arrived from the website. Please review the details
+                below and call the patient to confirm.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Highlighted date & time -->
+          <tr>
+            <td style="padding:20px 32px 4px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4faf6;border:1px solid #cdefdd;border-radius:12px;">
+                <tr>
+                  <td width="50%" style="padding:16px 20px;border-right:1px solid #cdefdd;">
+                    <div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#5b6b62;">📅 Date</div>
+                    <div style="font-size:18px;font-weight:bold;color:#0d2a1c;margin-top:4px;">{{appointment_date}}</div>
+                  </td>
+                  <td width="50%" style="padding:16px 20px;">
+                    <div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#5b6b62;">🕐 Time</div>
+                    <div style="font-size:18px;font-weight:bold;color:#0d2a1c;margin-top:4px;">{{appointment_time}}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Google Meet -->
+          <tr>
+            <td style="padding:16px 32px 4px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0d2a1c;border-radius:12px;">
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <div style="font-size:11px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;color:#c9a24a;">🎥 Online Video Consultation</div>
+                    <div style="font-size:13px;color:#9fc4ae;margin-top:4px;">Google Meet link for this appointment:</div>
+                    <a href="{{meet_link}}" style="display:inline-block;margin-top:12px;background-color:#1f9d68;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none;padding:12px 26px;border-radius:999px;">
+                      Join Google Meet →
+                    </a>
+                    <div style="font-size:12px;color:#7fa992;margin-top:10px;word-break:break-all;">{{meet_link}}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Details -->
+          <tr>
+            <td style="padding:16px 32px 8px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding:12px 0;border-bottom:1px solid #eef5f0;">
+                    <span style="display:inline-block;width:150px;font-size:13px;color:#5b6b62;">👤 Patient name</span>
+                    <span style="font-size:15px;color:#0d2a1c;font-weight:bold;">{{patient_name}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;border-bottom:1px solid #eef5f0;">
+                    <span style="display:inline-block;width:150px;font-size:13px;color:#5b6b62;">📞 Phone</span>
+                    <a href="tel:{{patient_phone}}" style="font-size:15px;color:#157a50;font-weight:bold;text-decoration:none;">{{patient_phone}}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;border-bottom:1px solid #eef5f0;">
+                    <span style="display:inline-block;width:150px;font-size:13px;color:#5b6b62;">✉️ Email</span>
+                    <a href="mailto:{{patient_email}}" style="font-size:15px;color:#157a50;text-decoration:none;">{{patient_email}}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;border-bottom:1px solid #eef5f0;">
+                    <span style="display:inline-block;width:150px;font-size:13px;color:#5b6b62;">🌿 Service</span>
+                    <span style="font-size:15px;color:#0d2a1c;font-weight:bold;">{{service}}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 0;">
+                    <span style="display:inline-block;width:150px;font-size:13px;color:#5b6b62;vertical-align:top;">📝 Notes</span>
+                    <span style="font-size:15px;color:#374d42;">{{notes}}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Call CTA -->
+          <tr>
+            <td align="center" style="padding:12px 32px 28px 32px;">
+              <a href="tel:{{patient_phone}}"
+                 style="display:inline-block;background-color:#1f9d68;color:#ffffff;font-size:15px;font-weight:bold;text-decoration:none;padding:14px 34px;border-radius:999px;">
+                📞 Call {{patient_name}} to confirm
+              </a>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#0d2a1c;padding:24px 32px;">
+              <div style="font-size:14px;font-weight:bold;color:#ffffff;">Shri Sai Ayurvedic Panchkarma &amp; Infertility Clinic</div>
+              <div style="font-size:12px;color:#9fc4ae;line-height:1.7;margin-top:6px;">
+                158, Basant Corner, Sita Vihar Colony, Behind Shristi Plaza,<br />
+                Avanti Vihar, Raipur, Chhattisgarh<br />
+                📞 097701 30255 &nbsp;·&nbsp; ✉️ shivsai81@gmail.com
+              </div>
+              <div style="font-size:11px;color:#5f7a6c;margin-top:14px;">
+                This alert was generated automatically from the Shri Sai Ayurveda website booking form.
+              </div>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

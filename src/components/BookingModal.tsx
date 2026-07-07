@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useT } from "./LanguageProvider";
+import { sendAppointmentEmail } from "@/lib/email";
 
 type Props = {
   isOpen: boolean;
@@ -178,6 +179,20 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
         body: JSON.stringify({ ...form, serviceLabel }),
       });
       if (!res.ok) throw new Error("Request failed");
+      const data = await res.json().catch(() => ({}));
+
+      // Best-effort clinic notification email — never blocks the booking.
+      sendAppointmentEmail({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        service: serviceLabel,
+        date: form.date,
+        time: form.time,
+        notes: form.notes,
+        meetLink: data.meetLink ?? null,
+      }).catch((err) => console.warn("Appointment email failed:", err));
+
       setStatus("success");
       setStep(3);
     } catch {

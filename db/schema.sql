@@ -87,9 +87,12 @@ CREATE TABLE IF NOT EXISTS appointments (
   notes            TEXT,
   status           TEXT        NOT NULL DEFAULT 'pending',  -- pending|confirmed|completed|cancelled
   source           TEXT        NOT NULL DEFAULT 'online',   -- online|walk-in
+  meet_link        TEXT,                                    -- Google Meet URL (if generated)
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+-- for databases created before meet_link existed:
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS meet_link TEXT;
 CREATE INDEX IF NOT EXISTS idx_appt_date   ON appointments (appointment_date);
 CREATE INDEX IF NOT EXISTS idx_appt_status ON appointments (status);
 CREATE INDEX IF NOT EXISTS idx_appt_patient ON appointments (patient_id);

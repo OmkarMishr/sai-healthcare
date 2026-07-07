@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import { isDbConfigured, query } from "@/lib/db";
+import { createMeetForAppointment } from "@/lib/googleMeet";
 
 export const runtime = "nodejs";
 
@@ -41,41 +42,54 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid phone number" }, { status: 400 });
   }
 
+  const email = (b.email ?? "").toString().trim();
+  const serviceLabel = (b.serviceLabel ?? "").toString().trim();
+  const notes = (b.notes ?? "").toString().trim();
+
+  // Create a Google Meet link (best-effort — skipped if not configured).
+  let meetLink: string | null = null;
+  try {
+    const meet = await createMeetForAppointment({
+      name,
+      email: email || undefined,
+      phone,
+      service: serviceLabel || service,
+      date,
+      time,
+      notes,
+    });
+    meetLink = meet?.meetLink ?? null;
+  } catch (err) {
+    console.warn("Google Meet creation failed:", err);
+  }
+
   try {
     if (isDbConfigured()) {
       const rows = await query<{ id: string }>(
         `INSERT INTO appointments
-           (service, service_label, appointment_date, appointment_time, name, phone, email, notes, status, source)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'pending','online')
+           (service, service_label, appointment_date, appointment_time, name, phone, email, notes, status, source, meet_link)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,'pending','online',$9)
          RETURNING id`,
-        [
-          service || null,
-          (b.serviceLabel ?? "").toString().trim() || null,
-          date,
-          time,
-          name,
-          phone,
-          (b.email ?? "").toString().trim() || null,
-          (b.notes ?? "").toString().trim() || null,
-        ],
+        [service || null, serviceLabel || null, date, time, name, phone, email || null, notes || null, meetLink],
       );
-      return NextResponse.json({ ok: true, id: rows[0].id }, { status: 201 });
+      return NextResponse.json({ ok: true, id: rows[0].id, meetLink }, { status: 201 });
     }
 
     const record = {
       id: randomUUID(),
       service,
-      serviceLabel: (b.serviceLabel ?? "").toString().trim(),
+      serviceLabel,
       date,
       time,
       name,
       phone,
-      email: (b.email ?? "").toString().trim(),
-      notes: (b.notes ?? "").toString().trim(),
+      email,
+      notes,
+      meetLink,
       createdAt: new Date().toISOString(),
     };
     await fileAppend(record);
-    return NextResponse.json({ ok: true, id: record.id }, { status: 201 });
+    return NextResponse.json({ ok: true, id: record.id, meetLink }, { status: 201 });
   } catch (err) {
     console.error("Appointment save failed:", err);
     return NextResponse.json({ error: "Could not save appointment" }, { status: 500 });

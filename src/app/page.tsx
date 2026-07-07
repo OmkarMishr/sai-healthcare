@@ -7,6 +7,7 @@ import Doctor from "@/components/Doctor";
 import WhyUs from "@/components/WhyUs";
 import Comparison from "@/components/Comparison";
 import Insurance from "@/components/Insurance";
+import Gallery from "@/components/Gallery";
 import Testimonials from "@/components/Testimonials";
 import Faq from "@/components/Faq";
 import ClosingCta from "@/components/ClosingCta";
@@ -27,6 +28,7 @@ export default function Home() {
         <Comparison />
         <Insurance />
         <Testimonials />
+        <Gallery />
         <Faq />
         <ClosingCta />
       </main>

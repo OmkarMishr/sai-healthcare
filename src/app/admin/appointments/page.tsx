@@ -17,6 +17,7 @@ type Appt = {
   source: string;
   notes: string | null;
   doctor_name: string | null;
+  meet_link: string | null;
 };
 
 type Doctor = { id: string; name: string };
@@ -157,7 +158,19 @@ function AppointmentsInner() {
                   <div className="font-semibold text-plum-900">{a.name}</div>
                   <div className="text-xs text-plum-900/60">{a.phone}</div>
                 </td>
-                <td className="px-4 py-3 text-plum-900/70">{a.service_label || "—"}</td>
+                <td className="px-4 py-3 text-plum-900/70">
+                  {a.service_label || "—"}
+                  {a.meet_link && (
+                    <a
+                      href={a.meet_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 block text-xs font-semibold text-emerald-600 hover:underline"
+                    >
+                      🎥 Join Meet
+                    </a>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <select
                     value=""
