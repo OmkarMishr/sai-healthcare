@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { Medal } from "lucide-react";
 import { useBooking } from "./BookingProvider";
 import { useLanguage } from "./LanguageProvider";
 
@@ -110,8 +111,11 @@ function DoctorRow({ doc, reverse }: { doc: Doctor; reverse: boolean }) {
             className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute -bottom-4 left-1/2 w-[92%] -translate-x-1/2 rounded-2xl border border-coral-100 bg-white px-4 py-2.5 text-center shadow-xl">
-          <p className="text-xs font-semibold text-plum-900">🏅 {c.badge}</p>
+        <div className="absolute -bottom-4 left-1/2 w-[92%] -translate-x-1/2 rounded-2xl border border-coral-100 bg-white px-4 py-2.5 shadow-xl">
+          <p className="flex items-center justify-center gap-1.5 text-xs font-semibold text-plum-900">
+            <Medal className="h-4 w-4 shrink-0 text-coral-600" />
+            {c.badge}
+          </p>
         </div>
       </div>
 

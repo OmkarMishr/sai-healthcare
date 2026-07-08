@@ -11,8 +11,8 @@ const content = {
 export default function Logo({ light = false }: { light?: boolean }) {
   const c = useT(content);
   return (
-    <div className="flex items-center gap-2.5">
-      <span className="inline-flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-black shadow-md ring-2 ring-coral-500/40">
+    <div className="flex min-w-0 items-center gap-2.5">
+      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black shadow-md ring-2 ring-coral-500/40 sm:h-12 sm:w-12">
         <Image
           src="/logo.png"
           alt="Shri Sai Ayurveda logo"
@@ -22,16 +22,16 @@ export default function Logo({ light = false }: { light?: boolean }) {
           priority
         />
       </span>
-      <span className="leading-tight">
+      <span className="min-w-0 leading-tight">
         <span
-          className={`block font-display text-lg font-extrabold tracking-tight ${
+          className={`block truncate font-display text-[15px] font-extrabold tracking-tight sm:text-lg ${
             light ? "text-white" : "text-plum-900"
           }`}
         >
           {c.name}
         </span>
         <span
-          className={`block text-[10px] font-semibold uppercase tracking-[0.16em] ${
+          className={`hidden truncate text-[10px] font-semibold uppercase tracking-[0.14em] sm:block ${
             light ? "text-coral-200" : "text-coral-600"
           }`}
         >

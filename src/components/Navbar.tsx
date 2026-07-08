@@ -13,7 +13,7 @@ const content = {
     announce: "Now booking this week — Consult Dr. S.S. Soni · 20 years in Ayurvedic infertility care",
     links: [
       { label: "Services", href: "#therapies" },
-      { label: "About Us", href: "#why-us" },
+      { label: "About Us", href: "#about" },
       {
         label: "Doctors",
         href: "#doctor",
@@ -33,7 +33,7 @@ const content = {
     announce: "इस सप्ताह अपॉइंटमेंट बुक करें — डॉ. एस.एस. सोनी से परामर्श · आयुर्वेदिक निःसंतानता में 20 वर्षों का अनुभव",
     links: [
       { label: "सेवाएँ", href: "#therapies" },
-      { label: "हमारे बारे में", href: "#why-us" },
+      { label: "हमारे बारे में", href: "#about" },
       {
         label: "चिकित्सक",
         href: "#doctor",
@@ -87,11 +87,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40">
+    <header className="sticky top-0 z-50">
       {/* Announcement bar */}
       <div className="bg-gradient-to-r from-coral-500 via-coral-400 to-coral-500 text-white">
-        <p className="mx-auto flex max-w-6xl items-center justify-center gap-2 px-4 py-2 text-center text-[13px] font-medium">
-          <span className="animate-floaty">✦</span>
+        <p className="mx-auto max-w-6xl px-4 py-2 text-center text-[13px] font-medium">
           {c.announce}
         </p>
       </div>
@@ -103,7 +102,7 @@ export default function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-          <a href="#top" aria-label="Shri Sai Ayurveda home" className="shrink-0">
+          <a href="#top" aria-label="Shri Sai Ayurveda home" className="min-w-0">
             <Logo />
           </a>
 
@@ -146,6 +145,8 @@ export default function Navbar() {
           {/* Right cluster */}
           <div className="flex shrink-0 items-center gap-2.5">
             <LangToggle />
+
+            {/* Desktop actions */}
             <Link
               href="/admin/login"
               className="hidden whitespace-nowrap rounded-full border border-plum-200 px-4 py-2 text-sm font-semibold text-plum-800 transition-colors hover:border-coral-300 hover:text-coral-600 xl:block"
@@ -154,13 +155,13 @@ export default function Navbar() {
             </Link>
             <button
               onClick={() => open()}
-              className="hidden whitespace-nowrap rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 sm:block"
+              className="hidden whitespace-nowrap rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 xl:block"
             >
               {c.book}
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-plum-900 xl:hidden"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-plum-900 xl:hidden"
               aria-label="Toggle menu"
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -201,7 +202,7 @@ export default function Navbar() {
                 {c.login}
               </Link>
               <a href="tel:+919770130255" className="rounded-lg px-3 py-2.5 text-sm font-semibold text-coral-600">
-                📞 097701 30255
+                Call: 097701 30255
               </a>
             </div>
           </div>

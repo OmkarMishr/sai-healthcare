@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone } from "lucide-react";
 import { useT } from "./LanguageProvider";
 import { sendAppointmentEmail } from "@/lib/email";
 
@@ -11,12 +12,12 @@ type Props = {
 };
 
 const services = [
-  { id: "consult", en: "Free Consultation", hi: "नि:शुल्क परामर्श", icon: "💬" },
-  { id: "infertility", en: "Female Infertility", hi: "स्त्री निःसंतानता", icon: "🌸" },
-  { id: "male", en: "Male Infertility", hi: "पुरुष निःसंतानता", icon: "👨" },
-  { id: "panchkarma", en: "Panchkarma Detox", hi: "पंचकर्म शुद्धिकरण", icon: "🌿" },
-  { id: "pcos", en: "PCOS / PCOD Care", hi: "PCOS / PCOD उपचार", icon: "🪷" },
-  { id: "general", en: "General Ayurveda", hi: "सामान्य आयुर्वेद", icon: "🍃" },
+  { id: "consult", en: "Free Consultation", hi: "नि:शुल्क परामर्श", icon: MessageCircle },
+  { id: "infertility", en: "Female Infertility", hi: "स्त्री निःसंतानता", icon: Flower },
+  { id: "male", en: "Male Infertility", hi: "पुरुष निःसंतानता", icon: User },
+  { id: "panchkarma", en: "Panchkarma Detox", hi: "पंचकर्म शुद्धिकरण", icon: Leaf },
+  { id: "pcos", en: "PCOS / PCOD Care", hi: "PCOS / PCOD उपचार", icon: Flower2 },
+  { id: "general", en: "General Ayurveda", hi: "सामान्य आयुर्वेद", icon: Sprout },
 ];
 
 const timeSlots = ["10:00 AM", "11:30 AM", "01:00 PM", "04:00 PM", "06:00 PM", "07:30 PM"];
@@ -48,7 +49,7 @@ const ui = {
     confirm: "Confirm Appointment",
     booking: "Booking…",
     done: "Done",
-    successTitle: "Appointment requested! 🎉",
+    successTitle: "Appointment requested!",
     callSooner: "Need us sooner? Call",
   },
   hi: {
@@ -77,7 +78,7 @@ const ui = {
     confirm: "अपॉइंटमेंट पक्का करें",
     booking: "बुक हो रहा है…",
     done: "पूर्ण",
-    successTitle: "अपॉइंटमेंट का अनुरोध मिल गया! 🎉",
+    successTitle: "अपॉइंटमेंट का अनुरोध मिल गया!",
     callSooner: "जल्दी चाहिए? कॉल करें",
   },
 };
@@ -249,7 +250,7 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                           : "border-plum-100 text-plum-900/80 hover:border-coral-200"
                       }`}
                     >
-                      <span className="text-lg">{s.icon}</span>
+                      <s.icon className="h-4 w-4 shrink-0" />
                       {s[svcLang]}
                     </button>
                   ))}
@@ -357,11 +358,14 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                   </>
                 )}
               </p>
-              <div className="mx-auto mt-5 max-w-xs rounded-xl bg-cream-50 px-4 py-3 text-left text-xs text-plum-900/60">
-                📞 {t.callSooner}{" "}
-                <a href="tel:+919770130255" className="font-semibold text-coral-600">
-                  097701 30255
-                </a>
+              <div className="mx-auto mt-5 flex max-w-xs items-center gap-2 rounded-xl bg-cream-50 px-4 py-3 text-left text-xs text-plum-900/60">
+                <Phone className="h-4 w-4 shrink-0 text-coral-600" />
+                <span>
+                  {t.callSooner}{" "}
+                  <a href="tel:+919770130255" className="font-semibold text-coral-600">
+                    097701 30255
+                  </a>
+                </span>
               </div>
             </div>
           )}

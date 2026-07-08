@@ -5,7 +5,6 @@ import { useBooking } from "./BookingProvider";
 import { useLanguage, useT } from "./LanguageProvider";
 
 type Therapy = {
-  icon: string;
   img?: string;
   highlight?: boolean;
   en: { name: string; sub: string; detail: string };
@@ -14,74 +13,62 @@ type Therapy = {
 
 const therapies: Therapy[] = [
   {
-    icon: "🌀",
     img: "/services/vaman.jpg",
     en: { name: "Vamana", sub: "Medicated Emesis", detail: "Therapeutic cleansing that clears excess Kapha — effective for asthma, chronic cough, cold, skin disorders, diabetes and high cholesterol." },
     hi: { name: "वमन", sub: "मेडिकेटेड वमन", detail: "अतिरिक्त कफ को निकालने वाली शुद्धि चिकित्सा — अस्थमा, पुरानी खांसी, सर्दी, त्वचा रोग, शुगर व कोलेस्ट्रॉल में लाभकारी।" },
   },
   {
-    icon: "🌿",
     img: "/services/virechan.jpg",
     en: { name: "Virechana", sub: "Medicated Purgation", detail: "Herbal purgation that detoxifies Pitta — relieves acidity, gas, jaundice, ascites and stubborn skin diseases." },
     hi: { name: "विरेचन", sub: "मेडिकेटेड विरेचन", detail: "पित्त शोधक विरेचन — एसिडिटी, गैस, पीलिया, जलोदर व जिद्दी त्वचा रोगों में राहत।" },
   },
   {
-    icon: "💧",
     img: "/services/vast.jpg",
     en: { name: "Basti", sub: "Medicated Enema", detail: "The prime therapy for Vata disorders — powerful for back pain, slip disc, arthritis, sciatica and piles." },
     hi: { name: "बस्ति", sub: "मेडिकेटेड एनिमा", detail: "वात रोगों की प्रमुख चिकित्सा — कमर दर्द, स्लिप डिस्क, संधिवात, साइटिका व पाइल्स में प्रभावी।" },
   },
   {
-    icon: "👃",
     img: "/services/nasya.jpg",
     en: { name: "Nasya", sub: "Medicated Nasal Drops", detail: "Medicated drops through the nose for migraine, chronic cold, hair fall and ear-nose-throat disorders." },
     hi: { name: "नस्य", sub: "मेडिकेटेड नेज़ल ड्रॉप", detail: "नाक द्वारा औषधि — माइग्रेन, पुरानी सर्दी, बाल झड़ना व कान-नाक-गला रोगों में लाभकारी।" },
   },
   {
-    icon: "🩸",
     img: "/services/blood-leting.jpg",
     en: { name: "Raktamokshana", sub: "Blood-letting", detail: "Purification of vitiated blood — for eczema, psoriasis, pimples, varicose veins and herpes." },
     hi: { name: "रक्तमोक्षण", sub: "रक्त शुद्धि", detail: "दूषित रक्त की शुद्धि — एग्ज़िमा, सोरायसिस, पिंपल, वेरिकोज़ वेन व हर्पीस में लाभकारी।" },
   },
   {
-    icon: "🫗",
     img: "/services/shirodhara.jpg",
     en: { name: "Shirodhara", sub: "Oil-stream Therapy", detail: "A warm stream of medicated oil over the forehead — calms stress, insomnia, anxiety, depression and migraine." },
     hi: { name: "शिरोधारा", sub: "तैल धारा चिकित्सा", detail: "मस्तक पर औषधीय तैल धारा — तनाव, अनिद्रा, चिंता, अवसाद व माइग्रेन को शांत करती है।" },
   },
   {
-    icon: "🦵",
     img: "/services/janu-vasti.jpg",
     en: { name: "Janu Basti", sub: "Knee Therapy", detail: "Warm medicated oil pooled over the knee — relieves osteoarthritis, joint pain, swelling and stiffness." },
     hi: { name: "जानु बस्ति", sub: "घुटना चिकित्सा", detail: "घुटने पर औषधीय तैल — ऑस्टियोआर्थराइटिस, जोड़ों के दर्द, सूजन व अकड़न में राहत।" },
   },
   {
-    icon: "💆",
     img: "/services/samvedan.jpg",
     en: { name: "Abhyanga & Swedana", sub: "Massage & Steam", detail: "Full-body herbal oil massage with herbal steam — eases obesity, fatigue, stiffness and body swelling." },
     hi: { name: "अभ्यंग व स्वेदन", sub: "मालिश व स्वेदन", detail: "पूर्ण शरीर औषधीय तैल मालिश व स्वेदन — मोटापा, थकान, जकड़न व शरीर की सूजन में लाभकारी।" },
   },
   {
-    icon: "🌸",
     img: "/services/uttar-basti.jpg",
     highlight: true,
     en: { name: "Uttar Basti", sub: "Fertility Specialty", detail: "Our specialised uterine & reproductive therapy — highly effective for infertility, tube block and PCOD." },
     hi: { name: "उत्तर बस्ति", sub: "प्रजनन विशेषज्ञता", detail: "हमारी विशेष गर्भाशय एवं प्रजनन चिकित्सा — निःसंतानता, ट्यूब ब्लॉक व PCOD में अत्यंत प्रभावी।" },
   },
   {
-    icon: "👶",
     img: "/services/swarnaprashan.jpg",
     en: { name: "Swarnaprashan", sub: "Child Immunity", detail: "A gold-based Ayurvedic tonic for children — boosts immunity, memory, digestion and healthy growth." },
     hi: { name: "स्वर्णप्राशन", sub: "बाल इम्युनिटी", detail: "बच्चों के लिए स्वर्ण आधारित आयुर्वेदिक टॉनिक — रोग प्रतिरोधक क्षमता, स्मृति व विकास बढ़ाए।" },
   },
   {
-    icon: "💇",
     img: "/services/hair-spa.jpg",
     en: { name: "Ayurvedic Hair Spa", sub: "Hair Care", detail: "Herbal scalp and hair therapy that nourishes roots and controls hair fall naturally." },
     hi: { name: "आयुर्वेदिक हेयर स्पा", sub: "बाल देखभाल", detail: "हर्बल स्कैल्प व बाल चिकित्सा — जड़ों को पोषण व हेयर फॉल में प्राकृतिक लाभ।" },
   },
   {
-    icon: "✨",
     img: "/services/facial.jpg",
     en: { name: "Ayurvedic Facial", sub: "Natural Glow", detail: "A natural herbal facial using Ayurvedic ingredients for radiant, healthy and clear skin." },
     hi: { name: "आयुर्वेदिक फेशियल", sub: "प्राकृतिक निखार", detail: "आयुर्वेदिक सामग्री से प्राकृतिक हर्बल फेशियल — दमकती, स्वस्थ व निखरी त्वचा के लिए।" },

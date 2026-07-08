@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { LayoutDashboard, Users, Calendar, Stethoscope } from "lucide-react";
 
 const nav = [
-  { label: "Dashboard", href: "/admin", icon: "🏠" },
-  { label: "Patients", href: "/admin/patients", icon: "🧑‍🤝‍🧑" },
-  { label: "Appointments", href: "/admin/appointments", icon: "📅" },
-  { label: "Doctors", href: "/admin/doctors", icon: "👨‍⚕️" },
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { label: "Patients", href: "/admin/patients", icon: Users },
+  { label: "Appointments", href: "/admin/appointments", icon: Calendar },
+  { label: "Doctors", href: "/admin/doctors", icon: Stethoscope },
 ];
 
 export default function AdminShell({
@@ -63,7 +64,7 @@ export default function AdminShell({
                   : "text-plum-900/75 hover:bg-coral-50"
               }`}
             >
-              <span>{n.icon}</span>
+              <n.icon className="h-4 w-4 shrink-0" />
               {n.label}
             </Link>
           ))}
@@ -102,11 +103,12 @@ export default function AdminShell({
             <Link
               key={n.href}
               href={n.href}
-              className={`whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold ${
+              className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold ${
                 isActive(n.href) ? "bg-coral-500 text-white" : "text-plum-900/70"
               }`}
             >
-              {n.icon} {n.label}
+              <n.icon className="h-3.5 w-3.5" />
+              {n.label}
             </Link>
           ))}
         </div>

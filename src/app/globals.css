@@ -34,6 +34,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* clip (not hidden) removes stray horizontal overflow without breaking
+     position: sticky on the navbar */
+  overflow-x: clip;
 }
 
 body {
@@ -41,6 +44,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 /* Utility: brand gradient text */

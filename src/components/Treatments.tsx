@@ -1,5 +1,6 @@
 "use client";
 
+import { Flower2, Leaf, Flower } from "lucide-react";
 import { useBooking } from "./BookingProvider";
 import { useT } from "./LanguageProvider";
 
@@ -16,21 +17,21 @@ const content = {
         title: "Nadi Pariksha & Dosha Diagnosis",
         body: "We begin with traditional pulse reading and a detailed assessment to find the true root cause — the Vata, Pitta or Kapha imbalance disturbing your reproductive health.",
         tag: "Root-cause first",
-        icon: "🪷",
+        icon: Flower2,
       },
       {
         step: "Step 02",
         title: "Shodhana — Panchkarma Detox",
         body: "Classical cleansing therapies — Vamana, Virechana and Basti — gently purify the body and clear the channels (srotas) that nourish Shukra and Artava dhatu (reproductive tissue).",
         tag: "Gentle & natural",
-        icon: "🌿",
+        icon: Leaf,
       },
       {
         step: "Step 03",
         title: "Uttar Basti & Rasayana",
         body: "Specialised uterine and reproductive therapy paired with rejuvenating Rasayana herbs to strengthen fertility, balance hormones and prepare the body for a healthy conception.",
         tag: "Fertility restoration",
-        icon: "🌸",
+        icon: Flower,
       },
     ],
   },
@@ -46,21 +47,21 @@ const content = {
         title: "नाड़ी परीक्षा एवं दोष निदान",
         body: "हम पारंपरिक नाड़ी परीक्षण और विस्तृत मूल्यांकन से आरंभ करते हैं ताकि असली मूल कारण — प्रजनन स्वास्थ्य को प्रभावित करने वाला वात, पित्त या कफ असंतुलन — का पता चल सके।",
         tag: "पहले मूल कारण",
-        icon: "🪷",
+        icon: Flower2,
       },
       {
         step: "चरण 02",
         title: "शोधन — पंचकर्म शुद्धिकरण",
         body: "वमन, विरेचन और बस्ति जैसी शास्त्रीय शुद्धिकरण चिकित्साएँ शरीर को कोमलता से शुद्ध करती हैं और शुक्र व आर्तव धातु (प्रजनन ऊतक) को पोषित करने वाले स्रोतों को खोलती हैं।",
         tag: "कोमल व प्राकृतिक",
-        icon: "🌿",
+        icon: Leaf,
       },
       {
         step: "चरण 03",
         title: "उत्तर बस्ति एवं रसायन",
         body: "विशेष गर्भाशय एवं प्रजनन चिकित्सा के साथ पुनर्जीवनदायी रसायन औषधियाँ — जो प्रजनन क्षमता बढ़ाती हैं, हार्मोन संतुलित करती हैं और स्वस्थ गर्भधारण के लिए शरीर को तैयार करती हैं।",
         tag: "प्रजनन क्षमता पुनर्स्थापन",
-        icon: "🌸",
+        icon: Flower,
       },
     ],
   },
@@ -89,8 +90,8 @@ export default function Treatments() {
               className="group relative rounded-3xl border border-coral-100 bg-cream-50 p-7 transition-all hover:-translate-y-1 hover:border-coral-200 hover:shadow-xl hover:shadow-coral-500/10"
             >
               <div className="flex items-center justify-between">
-                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
-                  {s.icon}
+                <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-coral-600 shadow-sm">
+                  <s.icon className="h-6 w-6" />
                 </span>
                 <span className="text-xs font-bold uppercase tracking-widest text-plum-400">
                   {s.step}

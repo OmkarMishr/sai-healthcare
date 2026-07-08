@@ -1,12 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { Leaf, MapPin } from "lucide-react";
 import { useBooking } from "./BookingProvider";
 import { useT } from "./LanguageProvider";
 
 const content = {
   en: {
-    badge: "🌿 Raipur's trusted Ayurvedic Panchkarma & infertility clinic",
+    badge: "Raipur's trusted Ayurvedic Panchkarma & infertility clinic",
     h1a: "The natural path to",
     h1b: "parenthood,",
     h1c: "rooted in Ayurveda.",
@@ -28,7 +29,7 @@ const content = {
     caption: "Our Clinic · Avanti Vihar, Raipur",
   },
   hi: {
-    badge: "🌿 रायपुर का विश्वसनीय आयुर्वेदिक पंचकर्म एवं निःसंतानता क्लिनिक",
+    badge: "रायपुर का विश्वसनीय आयुर्वेदिक पंचकर्म एवं निःसंतानता क्लिनिक",
     h1a: "संतान सुख की",
     h1b: "प्राकृतिक राह,",
     h1c: "आयुर्वेद से।",
@@ -66,6 +67,7 @@ export default function Hero() {
         {/* Copy */}
         <div className="animate-fade-up">
           <span className="inline-flex items-center gap-2 rounded-full border border-coral-200 bg-white/70 px-3 py-1.5 text-xs font-semibold text-coral-600">
+            <Leaf className="h-3.5 w-3.5" />
             {c.badge}
           </span>
 
@@ -124,7 +126,7 @@ export default function Hero() {
                 {/* caption */}
                 <div className="absolute inset-x-4 bottom-4">
                   <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-white/95">
-                    <span className="text-coral-300">📍</span>
+                    <MapPin className="h-3.5 w-3.5 shrink-0 text-coral-300" />
                     {c.caption}
                   </p>
                 </div>

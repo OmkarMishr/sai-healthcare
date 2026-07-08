@@ -1,5 +1,6 @@
 "use client";
 
+import { Phone } from "lucide-react";
 import { useBooking } from "./BookingProvider";
 import { useT } from "./LanguageProvider";
 
@@ -47,9 +48,10 @@ export default function ClosingCta() {
           </button>
           <a
             href="tel:+919770130255"
-            className="rounded-full border border-white/25 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
-            📞 097701 30255
+            <Phone className="h-4 w-4" />
+            097701 30255
           </a>
         </div>
         <p className="mt-6 text-xs text-white/55">{c.trust}</p>

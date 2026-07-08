@@ -2,6 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { Video } from "lucide-react";
 import AdminShell from "@/components/admin/AdminShell";
 import { apiGet, apiSend } from "@/lib/adminApi";
 
@@ -165,9 +166,9 @@ function AppointmentsInner() {
                       href={a.meet_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-1 block text-xs font-semibold text-emerald-600 hover:underline"
+                      className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:underline"
                     >
-                      🎥 Join Meet
+                      <Video className="h-3.5 w-3.5" /> Join Meet
                     </a>
                   )}
                 </td>

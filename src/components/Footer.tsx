@@ -1,6 +1,7 @@
 "use client";
 
 import Logo from "./Logo";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useT } from "./LanguageProvider";
 
 const content = {
@@ -88,20 +89,26 @@ export default function Footer() {
           <div>
             <h4 className="font-display text-sm font-bold text-white">{c.reachH}</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li>📍 {c.address}</li>
-              <li>
-                📞{" "}
+              <li className="flex gap-2">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-coral-300" />
+                <span>{c.address}</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Phone className="h-4 w-4 shrink-0 text-coral-300" />
                 <a href="tel:+919770130255" className="hover:text-coral-300">
                   097701 30255
                 </a>
               </li>
-              <li>
-                ✉️{" "}
+              <li className="flex items-center gap-2">
+                <Mail className="h-4 w-4 shrink-0 text-coral-300" />
                 <a href="mailto:shivsai81@gmail.com" className="hover:text-coral-300">
                   shivsai81@gmail.com
                 </a>
               </li>
-              <li>🕘 {c.timing}</li>
+              <li className="flex items-center gap-2">
+                <Clock className="h-4 w-4 shrink-0 text-coral-300" />
+                <span>{c.timing}</span>
+              </li>
             </ul>
           </div>
         </div>
