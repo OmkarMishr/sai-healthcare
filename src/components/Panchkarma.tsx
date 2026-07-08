@@ -12,52 +12,82 @@ type Therapy = {
 };
 
 const therapies: Therapy[] = [
+  // ——— Pradhana Karma: the five classical Panchkarma procedures, in sequence ———
   {
     img: "/services/vaman.jpg",
-    en: { name: "Vamana", sub: "Medicated Emesis", detail: "Therapeutic cleansing that clears excess Kapha — effective for asthma, chronic cough, cold, skin disorders, diabetes and high cholesterol." },
-    hi: { name: "वमन", sub: "मेडिकेटेड वमन", detail: "अतिरिक्त कफ को निकालने वाली शुद्धि चिकित्सा — अस्थमा, पुरानी खांसी, सर्दी, त्वचा रोग, शुगर व कोलेस्ट्रॉल में लाभकारी।" },
+    en: { name: "Vamana", sub: "1 · Medicated Emesis", detail: "Therapeutic cleansing that clears excess Kapha — effective for asthma, chronic cough, cold, skin disorders, diabetes and high cholesterol." },
+    hi: { name: "वमन", sub: "1 · मेडिकेटेड वमन", detail: "अतिरिक्त कफ को निकालने वाली शुद्धि चिकित्सा — अस्थमा, पुरानी खांसी, सर्दी, त्वचा रोग, शुगर व कोलेस्ट्रॉल में लाभकारी।" },
   },
   {
     img: "/services/virechan.jpg",
-    en: { name: "Virechana", sub: "Medicated Purgation", detail: "Herbal purgation that detoxifies Pitta — relieves acidity, gas, jaundice, ascites and stubborn skin diseases." },
-    hi: { name: "विरेचन", sub: "मेडिकेटेड विरेचन", detail: "पित्त शोधक विरेचन — एसिडिटी, गैस, पीलिया, जलोदर व जिद्दी त्वचा रोगों में राहत।" },
+    en: { name: "Virechana", sub: "2 · Medicated Purgation", detail: "Herbal purgation that detoxifies Pitta — relieves acidity, gas, jaundice, ascites and stubborn skin diseases." },
+    hi: { name: "विरेचन", sub: "2 · मेडिकेटेड विरेचन", detail: "पित्त शोधक विरेचन — एसिडिटी, गैस, पीलिया, जलोदर व जिद्दी त्वचा रोगों में राहत।" },
   },
   {
     img: "/services/vast.jpg",
-    en: { name: "Basti", sub: "Medicated Enema", detail: "The prime therapy for Vata disorders — powerful for back pain, slip disc, arthritis, sciatica and piles." },
-    hi: { name: "बस्ति", sub: "मेडिकेटेड एनिमा", detail: "वात रोगों की प्रमुख चिकित्सा — कमर दर्द, स्लिप डिस्क, संधिवात, साइटिका व पाइल्स में प्रभावी।" },
+    en: { name: "Basti", sub: "3 · Medicated Enema", detail: "The prime therapy for Vata disorders — powerful for back pain, slip disc, arthritis, sciatica and piles." },
+    hi: { name: "बस्ति", sub: "3 · मेडिकेटेड एनिमा", detail: "वात रोगों की प्रमुख चिकित्सा — कमर दर्द, स्लिप डिस्क, संधिवात, साइटिका व पाइल्स में प्रभावी।" },
   },
   {
     img: "/services/nasya.jpg",
-    en: { name: "Nasya", sub: "Medicated Nasal Drops", detail: "Medicated drops through the nose for migraine, chronic cold, hair fall and ear-nose-throat disorders." },
-    hi: { name: "नस्य", sub: "मेडिकेटेड नेज़ल ड्रॉप", detail: "नाक द्वारा औषधि — माइग्रेन, पुरानी सर्दी, बाल झड़ना व कान-नाक-गला रोगों में लाभकारी।" },
+    en: { name: "Nasya", sub: "4 · Medicated Nasal Drops", detail: "Medicated drops through the nose for migraine, chronic cold, hair fall and ear-nose-throat disorders." },
+    hi: { name: "नस्य", sub: "4 · मेडिकेटेड नेज़ल ड्रॉप", detail: "नाक द्वारा औषधि — माइग्रेन, पुरानी सर्दी, बाल झड़ना व कान-नाक-गला रोगों में लाभकारी।" },
   },
   {
     img: "/services/blood-leting.jpg",
-    en: { name: "Raktamokshana", sub: "Blood-letting", detail: "Purification of vitiated blood — for eczema, psoriasis, pimples, varicose veins and herpes." },
-    hi: { name: "रक्तमोक्षण", sub: "रक्त शुद्धि", detail: "दूषित रक्त की शुद्धि — एग्ज़िमा, सोरायसिस, पिंपल, वेरिकोज़ वेन व हर्पीस में लाभकारी।" },
+    en: { name: "Raktamokshana", sub: "5 · Blood-letting", detail: "Purification of vitiated blood — for eczema, psoriasis, pimples, varicose veins and herpes." },
+    hi: { name: "रक्तमोक्षण", sub: "5 · रक्त शुद्धि", detail: "दूषित रक्त की शुद्धि — एग्ज़िमा, सोरायसिस, पिंपल, वेरिकोज़ वेन व हर्पीस में लाभकारी।" },
   },
-  {
-    img: "/services/shirodhara.jpg",
-    en: { name: "Shirodhara", sub: "Oil-stream Therapy", detail: "A warm stream of medicated oil over the forehead — calms stress, insomnia, anxiety, depression and migraine." },
-    hi: { name: "शिरोधारा", sub: "तैल धारा चिकित्सा", detail: "मस्तक पर औषधीय तैल धारा — तनाव, अनिद्रा, चिंता, अवसाद व माइग्रेन को शांत करती है।" },
-  },
-  {
-    img: "/services/janu-vasti.jpg",
-    en: { name: "Janu Basti", sub: "Knee Therapy", detail: "Warm medicated oil pooled over the knee — relieves osteoarthritis, joint pain, swelling and stiffness." },
-    hi: { name: "जानु बस्ति", sub: "घुटना चिकित्सा", detail: "घुटने पर औषधीय तैल — ऑस्टियोआर्थराइटिस, जोड़ों के दर्द, सूजन व अकड़न में राहत।" },
-  },
-  {
-    img: "/services/samvedan.jpg",
-    en: { name: "Abhyanga & Swedana", sub: "Massage & Steam", detail: "Full-body herbal oil massage with herbal steam — eases obesity, fatigue, stiffness and body swelling." },
-    hi: { name: "अभ्यंग व स्वेदन", sub: "मालिश व स्वेदन", detail: "पूर्ण शरीर औषधीय तैल मालिश व स्वेदन — मोटापा, थकान, जकड़न व शरीर की सूजन में लाभकारी।" },
-  },
+  // ——— Our fertility specialty (a specialised Basti) ———
   {
     img: "/services/uttar-basti.jpg",
     highlight: true,
     en: { name: "Uttar Basti", sub: "Fertility Specialty", detail: "Our specialised uterine & reproductive therapy — highly effective for infertility, tube block and PCOD." },
     hi: { name: "उत्तर बस्ति", sub: "प्रजनन विशेषज्ञता", detail: "हमारी विशेष गर्भाशय एवं प्रजनन चिकित्सा — निःसंतानता, ट्यूब ब्लॉक व PCOD में अत्यंत प्रभावी।" },
   },
+  // ——— Snehana & Swedana + Dhara therapies ———
+  {
+    img: "/services/samvedan.jpg",
+    en: { name: "Abhyanga & Swedana", sub: "Massage & Steam", detail: "Full-body herbal oil massage with herbal steam — eases obesity, fatigue, stiffness and body swelling." },
+    hi: { name: "अभ्यंग व स्वेदन", sub: "मालिश व स्वेदन", detail: "पूर्ण शरीर औषधीय तैल मालिश व स्वेदन — मोटापा, थकान, जकड़न व शरीर की सूजन में लाभकारी।" },
+  },
+  {
+    img: "/services/shirodhara.jpg",
+    en: { name: "Shirodhara", sub: "Forehead Oil Stream", detail: "A warm stream of medicated oil over the forehead — calms stress, insomnia, anxiety, depression and migraine." },
+    hi: { name: "शिरोधारा", sub: "मस्तक तैल धारा", detail: "मस्तक पर औषधीय तैल धारा — तनाव, अनिद्रा, चिंता, अवसाद व माइग्रेन को शांत करती है।" },
+  },
+  {
+    img: "/services/tel-dhara.jpg",
+    en: { name: "Tel Dhara", sub: "Full-Body Oil Stream", detail: "A continuous stream of warm medicated oil over the whole body — deeply relaxes the nervous system, eases fatigue and rejuvenates." },
+    hi: { name: "तैल धारा", sub: "सर्वांग तैल धारा", detail: "पूरे शरीर पर निरंतर गर्म औषधीय तैल धारा — तंत्रिका तंत्र को गहराई से शांत करती है, थकान दूर कर कायाकल्प करती है।" },
+  },
+  // ——— Localised Vasti (oil-retention) therapies ———
+  {
+    img: "/services/kativasti.jpg",
+    en: { name: "Kati Vasti", sub: "Lower-Back Therapy", detail: "Warm medicated oil pooled over the lower back — relieves chronic low-back pain, slip disc, sciatica and spinal stiffness." },
+    hi: { name: "कटि वस्ति", sub: "कटि (कमर) चिकित्सा", detail: "पीठ के निचले हिस्से पर औषधीय तैल — कमर के पुराने दर्द, स्लिप डिस्क, साइटिका व रीढ़ की अकड़न में राहत।" },
+  },
+  {
+    img: "/services/grivavasti.jpg",
+    en: { name: "Griva Vasti", sub: "Neck Therapy", detail: "Medicated oil retained over the neck — eases cervical spondylosis, neck pain, stiffness and shoulder tension." },
+    hi: { name: "ग्रीवा वस्ति", sub: "ग्रीवा (गर्दन) चिकित्सा", detail: "गर्दन पर औषधीय तैल — सर्वाइकल स्पॉन्डिलाइसिस, गर्दन दर्द, अकड़न व कंधे के तनाव में राहत।" },
+  },
+  {
+    img: "/services/janu-vasti.jpg",
+    en: { name: "Janu Basti", sub: "Knee Therapy", detail: "Warm medicated oil pooled over the knee — relieves osteoarthritis, joint pain, swelling and stiffness." },
+    hi: { name: "जानु बस्ति", sub: "जानु (घुटना) चिकित्सा", detail: "घुटने पर औषधीय तैल — ऑस्टियोआर्थराइटिस, जोड़ों के दर्द, सूजन व अकड़न में राहत।" },
+  },
+  {
+    img: "/services/hriday-vasati.jpg",
+    en: { name: "Hridaya Vasti", sub: "Heart Therapy", detail: "Warm oil pooled over the heart region — nourishes the heart, calms stress and supports cardiac and emotional wellbeing." },
+    hi: { name: "हृदय वस्ति", sub: "हृदय चिकित्सा", detail: "हृदय क्षेत्र पर औषधीय तैल — हृदय को पोषण, तनाव को शांत तथा हृदय व भावनात्मक स्वास्थ्य में सहायक।" },
+  },
+  {
+    img: "/services/shiro-vasti.jpg",
+    en: { name: "Shiro Vasti", sub: "Head Therapy", detail: "Medicated oil held over the head in a cap — for insomnia, anxiety, migraine, facial palsy and neurological conditions." },
+    hi: { name: "शिरो वस्ति", sub: "शिरो (सिर) चिकित्सा", detail: "सिर पर टोपीनुमा विधि से औषधीय तैल — अनिद्रा, चिंता, माइग्रेन, चेहरे का लकवा व स्नायविक रोगों में लाभकारी।" },
+  },
+  // ——— Special & wellness services ———
   {
     img: "/services/swarnaprashan.jpg",
     en: { name: "Swarnaprashan", sub: "Child Immunity", detail: "A gold-based Ayurvedic tonic for children — boosts immunity, memory, digestion and healthy growth." },
