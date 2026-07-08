@@ -6,12 +6,12 @@ import { useLanguage, useT } from "./LanguageProvider";
 
 // Files live in /public/gallery. Add more here as you upload them.
 const photos: { src: string; en: string; hi: string }[] = [
-  { src: "/gallery/Ex CM bhupesh.png", en: "Honoured by Ex-CM Shri Bhupesh Baghel", hi: "पूर्व मुख्यमंत्री श्री भूपेश बघेल द्वारा सम्मानित" },
-  { src: "/gallery/RamdevBaba.png", en: "With Yoga Guru Swami Ramdev Ji", hi: "योग गुरु स्वामी रामदेव जी के साथ" },
-  { src: "/gallery/Phd degree.png", en: "Ph.D. degree conferred", hi: "पी.एच.डी. उपाधि प्रदान" },
-  { src: "/gallery/HOD of Raigarh medical college.png", en: "HOD — Raigarh Medical College & Hospital of Ayurveda", hi: "विभागाध्यक्ष — रायगढ़ मेडिकल कॉलेज एवं आयुर्वेद अस्पताल" },
-  { src: "/gallery/DD-Raipur Poadcast.png", en: "Featured on DD Raipur podcast", hi: "डीडी रायपुर पॉडकास्ट में सम्मिलित" },
-  { src: "/gallery/Foregin-Patent.png", en: "Welcoming patients from abroad", hi: "विदेशी रोगियों का स्वागत" },
+  { src: "/gallery/ex-cm-bhupesh.png", en: "Honoured by Ex-CM Shri Bhupesh Baghel", hi: "पूर्व मुख्यमंत्री श्री भूपेश बघेल द्वारा सम्मानित" },
+  { src: "/gallery/ramdev-baba.png", en: "With Yoga Guru Swami Ramdev Ji", hi: "योग गुरु स्वामी रामदेव जी के साथ" },
+  { src: "/gallery/phd-degree.png", en: "Ph.D. degree conferred", hi: "पी.एच.डी. उपाधि प्रदान" },
+  { src: "/gallery/hod-raigarh-college.png", en: "HOD — Raigarh Medical College & Hospital of Ayurveda", hi: "विभागाध्यक्ष — रायगढ़ मेडिकल कॉलेज एवं आयुर्वेद अस्पताल" },
+  { src: "/gallery/dd-raipur-podcast.png", en: "Featured on DD Raipur podcast", hi: "डीडी रायपुर पॉडकास्ट में सम्मिलित" },
+  { src: "/gallery/foreign-patients.png", en: "Welcoming patients from abroad", hi: "विदेशी रोगियों का स्वागत" },
 ];
 
 const content = {

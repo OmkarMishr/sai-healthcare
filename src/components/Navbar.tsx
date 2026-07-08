@@ -102,7 +102,7 @@ export default function Navbar() {
         }`}
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
-          <a href="#top" aria-label="Shri Sai Ayurveda home" className="min-w-0">
+          <a href="#top" aria-label="Shri Sai Ayurveda home" className="shrink-0">
             <Logo />
           </a>
 
@@ -153,12 +153,6 @@ export default function Navbar() {
             >
               {c.login}
             </Link>
-            <button
-              onClick={() => open()}
-              className="hidden whitespace-nowrap rounded-full bg-gradient-to-r from-coral-500 to-coral-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-coral-500/25 transition-transform hover:scale-[1.03] active:scale-95 xl:block"
-            >
-              {c.book}
-            </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
               className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-plum-900 xl:hidden"

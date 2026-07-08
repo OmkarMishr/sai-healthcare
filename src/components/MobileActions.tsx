@@ -61,7 +61,7 @@ export default function MobileActions() {
 
   return (
     <div
-      className="fixed right-3 z-40 flex flex-col items-end gap-2 xl:hidden"
+      className="fixed right-3 z-40 flex flex-col items-end gap-2"
       style={{ top }}
     >
       {/* Book Appointment */}
