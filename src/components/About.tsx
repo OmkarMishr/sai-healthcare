@@ -4,11 +4,25 @@ import Image from "next/image";
 import { Hospital, BedDouble, Leaf, Stethoscope, MapPin } from "lucide-react";
 import { useT } from "./LanguageProvider";
 
+// Files live in /public/hospital (h9 featured first)
+const hospitalPhotos = [
+  "/hospital/h9.jpeg",
+  "/hospital/h2.jpeg",
+  "/hospital/h3.jpeg",
+  "/hospital/h5.jpeg",
+  "/hospital/h6.jpeg",
+  "/hospital/h7.jpeg",
+  "/hospital/h8.jpeg",
+  "/hospital/h10.jpeg",
+];
+
 const content = {
   en: {
     eyebrow: "About us",
     titleA: "A dedicated Ayurvedic",
     titleB: "Panchkarma hospital",
+    galleryTitle: "Inside our hospital",
+    galleryAlt: "Shri Sai Ayurvedic hospital",
     p1: "Shri Sai Ayurvedic Panchkarma & Infertility Centre is a purpose-built Ayurvedic hospital in the heart of Avanti Vihar, Raipur. For over two decades we have combined authentic, classical Panchkarma with a clean, modern and caring hospital environment.",
     p2: "Led by Dr. S.S. Soni and Dr. Varsha Soni, our centre offers dedicated therapy rooms, in-patient stay facilities and an in-house herbal pharmacy — everything a patient needs under one roof. Dr. Soni also serves as HOD at Raigarh Medical College & Hospital of Ayurveda, and our doctors mentor at Ayurvedic colleges in Bhopal and Aligarh.",
     address: "158, Basant Corner, Avanti Vihar, Raipur, Chhattisgarh",
@@ -23,6 +37,8 @@ const content = {
     eyebrow: "हमारे बारे में",
     titleA: "एक समर्पित आयुर्वेदिक",
     titleB: "पंचकर्म अस्पताल",
+    galleryTitle: "हमारे अस्पताल की झलक",
+    galleryAlt: "श्री साई आयुर्वेदिक अस्पताल",
     p1: "श्री साई आयुर्वेदिक पंचकर्म एवं निःसंतानता केंद्र, अवंती विहार, रायपुर के हृदय में स्थित एक विशेष रूप से निर्मित आयुर्वेदिक अस्पताल है। दो दशकों से अधिक समय से हम प्रामाणिक शास्त्रीय पंचकर्म को स्वच्छ, आधुनिक और देखभालपूर्ण अस्पताल वातावरण के साथ जोड़ते आ रहे हैं।",
     p2: "डॉ. एस.एस. सोनी एवं डॉ. वर्षा सोनी के नेतृत्व में, हमारे केंद्र में समर्पित चिकित्सा कक्ष, भर्ती (इन-पेशेंट) सुविधा और अपनी हर्बल फार्मेसी है — एक ही छत के नीचे रोगी की हर आवश्यकता। डॉ. सोनी रायगढ़ मेडिकल कॉलेज एवं आयुर्वेद अस्पताल में विभागाध्यक्ष भी हैं, तथा हमारे चिकित्सक भोपाल व अलीगढ़ के आयुर्वेदिक कॉलेजों में मार्गदर्शन देते हैं।",
     address: "158, बसंत कॉर्नर, अवंती विहार, रायपुर, छत्तीसगढ़",
@@ -82,6 +98,31 @@ export default function About() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Hospital photos */}
+        <div className="mt-14 md:mt-20">
+          <h3 className="text-center font-display text-2xl font-extrabold tracking-tight text-plum-900 sm:text-3xl">
+            {c.galleryTitle}
+          </h3>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {hospitalPhotos.map((src) => (
+              <div
+                key={src}
+                className="group relative overflow-hidden rounded-2xl border border-plum-100 bg-plum-100 shadow-sm"
+              >
+                <div className="relative aspect-[4/3] w-full">
+                  <Image
+                    src={src}
+                    alt={c.galleryAlt}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
