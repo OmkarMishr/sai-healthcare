@@ -26,7 +26,7 @@ const content = {
         naturally
       </>
     ),
-    caption: "Our Clinic · Avanti Vihar, Raipur",
+    caption: "Our Hospital · Avanti Vihar, Raipur",
   },
   hi: {
     badge: "रायपुर का विश्वसनीय आयुर्वेदिक पंचकर्म एवं निःसंतानता क्लिनिक",
@@ -114,8 +114,8 @@ export default function Hero() {
             <div className="overflow-hidden rounded-[2rem] bg-gradient-to-br from-plum-600 via-plum-500 to-coral-500 p-1 shadow-2xl shadow-plum-900/20">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[1.8rem] bg-plum-100">
                 <Image
-                  src="/clinic_front_view.jpeg"
-                  alt="Shri Sai Ayurvedic Panchkarma & Infertility Clinic, Avanti Vihar, Raipur"
+                  src="/hospital_front_view.png"
+                  alt="Shri Sai Ayurvedic Panchkarma & Infertility Hospital, Avanti Vihar, Raipur"
                   fill
                   sizes="(max-width: 768px) 90vw, 400px"
                   className="object-cover"
