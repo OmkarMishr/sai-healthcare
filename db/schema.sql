@@ -88,11 +88,21 @@ CREATE TABLE IF NOT EXISTS appointments (
   status           TEXT        NOT NULL DEFAULT 'pending',  -- pending|confirmed|completed|cancelled
   source           TEXT        NOT NULL DEFAULT 'online',   -- online|walk-in
   meet_link        TEXT,                                    -- Google Meet URL (if generated)
+  consultation_mode   TEXT     NOT NULL DEFAULT 'online',   -- online|visit
+  payment_status      TEXT     NOT NULL DEFAULT 'unpaid',   -- paid|pay_at_hospital|unpaid
+  payment_amount      INTEGER,                              -- consultation fee in INR
+  razorpay_order_id   TEXT,
+  razorpay_payment_id TEXT,
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
--- for databases created before meet_link existed:
+-- for databases created before these columns existed:
 ALTER TABLE appointments ADD COLUMN IF NOT EXISTS meet_link TEXT;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS consultation_mode   TEXT NOT NULL DEFAULT 'online';
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_status      TEXT NOT NULL DEFAULT 'unpaid';
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_amount      INTEGER;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS razorpay_order_id   TEXT;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;
 CREATE INDEX IF NOT EXISTS idx_appt_date   ON appointments (appointment_date);
 CREATE INDEX IF NOT EXISTS idx_appt_status ON appointments (status);
 CREATE INDEX IF NOT EXISTS idx_appt_patient ON appointments (patient_id);

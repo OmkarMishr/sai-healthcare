@@ -21,7 +21,7 @@ type Doctor = { img: string; en: DocContent; hi: DocContent };
 
 const doctors: Doctor[] = [
   {
-    img: "/dr-soni.jpg",
+    img: "/dr-soni.jpeg",
     en: {
       eyebrow: "Meet your Ayurvedic fertility expert",
       name: "Dr. S.S. Soni",
@@ -56,7 +56,7 @@ const doctors: Doctor[] = [
     },
   },
   {
-    img: "/dr-varsha.jpg",
+    img: "/dr-varsha.jpeg",
     en: {
       eyebrow: "Women's health & infertility care",
       name: "Dr. Varsha Soni",

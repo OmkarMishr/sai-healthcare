@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone } from "lucide-react";
+import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone, Video, Building2, Stethoscope } from "lucide-react";
 import { useT } from "./LanguageProvider";
 import { sendAppointmentEmail } from "@/lib/email";
+import { CONSULTATION_FEE_INR } from "@/lib/pricing";
 
 type Props = {
   isOpen: boolean;
@@ -26,9 +27,19 @@ const ui = {
   en: {
     title: "Book Your Appointment",
     subtitle: "With Dr. S.S. Soni · Panchkarma & Infertility",
+    modeL: "How would you like to consult?",
+    modeOnline: "Online consult",
+    modeOnlineHint: "Video call over Google Meet",
+    modeVisit: "Visit hospital",
+    modeVisitHint: "In-person at our Raipur centre",
     q1: "What can we help you with?",
+    doctorL: "Choose your doctor",
     dateL: "Preferred date",
     timeL: "Preferred time",
+    pickDoctorFirst: "Select a doctor to see available times.",
+    slotLoading: "Loading available times…",
+    noAvail: "Not available on this date. Please pick another date.",
+    errDoctor: "Please choose a doctor",
     nameL: "Full name *",
     namePh: "e.g. Priya Sharma",
     phoneL: "Phone number *",
@@ -51,13 +62,31 @@ const ui = {
     done: "Done",
     successTitle: "Appointment requested!",
     callSooner: "Need us sooner? Call",
+    feeNote: "Consultation fee",
+    payConfirm: `Pay ₹${CONSULTATION_FEE_INR} & Confirm`,
+    payNow: `Pay ₹${CONSULTATION_FEE_INR} now`,
+    payAtHospital: "Pay at hospital",
+    paying: "Opening payment…",
+    errPay: "Payment could not be completed. If any amount was deducted it will be refunded. Please try again.",
+    paidNote: `Payment of ₹${CONSULTATION_FEE_INR} received.`,
+    hospitalNote: `Please pay ₹${CONSULTATION_FEE_INR} at the hospital reception.`,
   },
   hi: {
     title: "अपना अपॉइंटमेंट बुक करें",
     subtitle: "डॉ. एस.एस. सोनी के साथ · पंचकर्म एवं निःसंतानता",
+    modeL: "आप परामर्श कैसे लेना चाहेंगे?",
+    modeOnline: "ऑनलाइन परामर्श",
+    modeOnlineHint: "Google Meet पर वीडियो कॉल",
+    modeVisit: "अस्पताल आएँ",
+    modeVisitHint: "हमारे रायपुर केंद्र पर व्यक्तिगत रूप से",
     q1: "हम आपकी किस प्रकार सहायता करें?",
+    doctorL: "अपना चिकित्सक चुनें",
     dateL: "पसंदीदा तारीख",
     timeL: "पसंदीदा समय",
+    pickDoctorFirst: "उपलब्ध समय देखने के लिए चिकित्सक चुनें।",
+    slotLoading: "उपलब्ध समय लोड हो रहा है…",
+    noAvail: "इस तारीख को उपलब्ध नहीं। कृपया दूसरी तारीख चुनें।",
+    errDoctor: "कृपया एक चिकित्सक चुनें",
     nameL: "पूरा नाम *",
     namePh: "जैसे प्रिया शर्मा",
     phoneL: "फ़ोन नंबर *",
@@ -80,11 +109,41 @@ const ui = {
     done: "पूर्ण",
     successTitle: "अपॉइंटमेंट का अनुरोध मिल गया!",
     callSooner: "जल्दी चाहिए? कॉल करें",
+    feeNote: "परामर्श शुल्क",
+    payConfirm: `₹${CONSULTATION_FEE_INR} भुगतान करें व पक्का करें`,
+    payNow: `अभी ₹${CONSULTATION_FEE_INR} भुगतान करें`,
+    payAtHospital: "अस्पताल में भुगतान करें",
+    paying: "भुगतान खुल रहा है…",
+    errPay: "भुगतान पूर्ण नहीं हो सका। यदि कोई राशि कटी है तो वह वापस कर दी जाएगी। कृपया पुनः प्रयास करें।",
+    paidNote: `₹${CONSULTATION_FEE_INR} का भुगतान प्राप्त हुआ।`,
+    hospitalNote: `कृपया अस्पताल रिसेप्शन पर ₹${CONSULTATION_FEE_INR} का भुगतान करें।`,
   },
 };
 
+// Razorpay checkout callback response shape.
+type RazorpayResponse = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+// Load the Razorpay checkout script once, on demand.
+function loadRazorpayScript(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === "undefined") return resolve(false);
+    if ((window as unknown as { Razorpay?: unknown }).Razorpay) return resolve(true);
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
+}
+
 type FormState = {
+  mode: "online" | "visit";
   service: string;
+  doctorId: string;
   date: string;
   time: string;
   name: string;
@@ -94,7 +153,9 @@ type FormState = {
 };
 
 const emptyForm: FormState = {
+  mode: "online",
   service: "",
+  doctorId: "",
   date: "",
   time: "",
   name: "",
@@ -102,6 +163,8 @@ const emptyForm: FormState = {
   email: "",
   notes: "",
 };
+
+type Doctor = { id: string; name: string; specialization: string | null };
 
 function todayISO() {
   return new Date().toISOString().split("T")[0];
@@ -114,7 +177,16 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "payerror">("idle");
+  // How the confirmed booking was settled — drives the success screen copy.
+  const [settledAs, setSettledAs] = useState<"paid" | "hospital" | null>(null);
+  const [meetLink, setMeetLink] = useState<string | null>(null);
+
+  // Doctors + availability-driven time slots.
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [slots, setSlots] = useState<string[]>([]);
+  const [slotsConfigured, setSlotsConfigured] = useState(true);
+  const [slotsLoading, setSlotsLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -122,8 +194,54 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
       setForm({ ...emptyForm, service: presetService ?? "" });
       setErrors({});
       setStatus("idle");
+      setSettledAs(null);
+      setMeetLink(null);
+      setSlots([]);
+      setSlotsConfigured(true);
     }
   }, [isOpen, presetService]);
+
+  // Load bookable doctors once the modal opens.
+  useEffect(() => {
+    if (!isOpen) return;
+    let alive = true;
+    fetch("/api/doctors")
+      .then((r) => r.json())
+      .then((d) => alive && setDoctors(Array.isArray(d.doctors) ? d.doctors : []))
+      .catch(() => alive && setDoctors([]));
+    return () => {
+      alive = false;
+    };
+  }, [isOpen]);
+
+  const hasDoctors = doctors.length > 0;
+
+  // Fetch the chosen doctor's slots whenever doctor or date changes.
+  useEffect(() => {
+    if (!isOpen || !hasDoctors || !form.doctorId || !form.date) {
+      setSlots([]);
+      setSlotsConfigured(true);
+      return;
+    }
+    let alive = true;
+    setSlotsLoading(true);
+    fetch(`/api/doctors/${form.doctorId}/slots?date=${form.date}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!alive) return;
+        setSlots(Array.isArray(d.slots) ? d.slots : []);
+        setSlotsConfigured(d.configured !== false);
+      })
+      .catch(() => {
+        if (!alive) return;
+        setSlots([]);
+        setSlotsConfigured(true);
+      })
+      .finally(() => alive && setSlotsLoading(false));
+    return () => {
+      alive = false;
+    };
+  }, [isOpen, hasDoctors, form.doctorId, form.date]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -145,11 +263,25 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
     [form.service],
   );
 
+  // Slots actually offered: availability-driven when a doctor with a configured
+  // schedule is chosen, otherwise fall back to the default clinic slots so the
+  // site still works before availability is set up (or without a database).
+  const displaySlots = useMemo(() => {
+    if (!hasDoctors) return timeSlots;
+    if (!slotsConfigured) return timeSlots;
+    return slots;
+  }, [hasDoctors, slotsConfigured, slots]);
+
+  // Reset doctor/date/time together so a stale time can't survive a change.
+  const setDoctor = (id: string) => setForm((f) => ({ ...f, doctorId: id, time: "" }));
+  const setDate = (date: string) => setForm((f) => ({ ...f, date, time: "" }));
+
   if (!isOpen) return null;
 
   const validateStep1 = () => {
     const e: typeof errors = {};
     if (!form.service) e.service = t.errService;
+    if (hasDoctors && !form.doctorId) e.doctorId = t.errDoctor;
     if (!form.date) e.date = t.errDate;
     if (!form.time) e.time = t.errTime;
     setErrors(e);
@@ -170,14 +302,25 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
     if (step === 1 && validateStep1()) setStep(2);
   };
 
-  const submit = async () => {
-    if (!validateStep2()) return;
+  // Persist the appointment. `payment` is present for paid bookings (its
+  // signature is re-verified server-side); `payAtHospital` marks a visit
+  // that will be settled at the reception.
+  const finalizeBooking = async (opts: {
+    payAtHospital?: boolean;
+    payment?: { orderId: string; paymentId: string; signature: string };
+  }) => {
     setStatus("loading");
     try {
       const res = await fetch("/api/appointments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, serviceLabel }),
+        body: JSON.stringify({
+          ...form,
+          serviceLabel,
+          consultationMode: form.mode,
+          payAtHospital: !!opts.payAtHospital,
+          payment: opts.payment ?? null,
+        }),
       });
       if (!res.ok) throw new Error("Request failed");
       const data = await res.json().catch(() => ({}));
@@ -194,10 +337,66 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
         meetLink: data.meetLink ?? null,
       }).catch((err) => console.warn("Appointment email failed:", err));
 
+      setMeetLink(data.meetLink ?? null);
+      setSettledAs(opts.payAtHospital ? "hospital" : "paid");
       setStatus("success");
       setStep(3);
     } catch {
       setStatus("error");
+    }
+  };
+
+  // Visit + "pay at hospital": no online payment, book straight away.
+  const bookPayAtHospital = () => {
+    if (!validateStep2()) return;
+    finalizeBooking({ payAtHospital: true });
+  };
+
+  // Online, or visit + "pay now": collect the fee via Razorpay first, then
+  // finalise the booking only after the checkout succeeds.
+  const payAndBook = async () => {
+    if (!validateStep2()) return;
+    setStatus("loading");
+    try {
+      const orderRes = await fetch("/api/payments/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: form.name, phone: form.phone, service: serviceLabel }),
+      });
+      if (!orderRes.ok) throw new Error("order");
+      const order = await orderRes.json();
+
+      const ready = await loadRazorpayScript();
+      const RZP = (window as unknown as { Razorpay?: new (o: unknown) => { open: () => void; on: (e: string, cb: () => void) => void } }).Razorpay;
+      if (!ready || !RZP) throw new Error("script");
+
+      const rzp = new RZP({
+        key: order.keyId,
+        order_id: order.orderId,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Shri Sai Ayurveda",
+        description: serviceLabel || "Consultation",
+        prefill: {
+          name: form.name,
+          email: form.email || undefined,
+          contact: form.phone,
+        },
+        theme: { color: "#e26a5a" },
+        handler: (resp: RazorpayResponse) =>
+          finalizeBooking({
+            payment: {
+              orderId: resp.razorpay_order_id,
+              paymentId: resp.razorpay_payment_id,
+              signature: resp.razorpay_signature,
+            },
+          }),
+        modal: { ondismiss: () => setStatus("idle") },
+      });
+      rzp.on("payment.failed", () => setStatus("payerror"));
+      rzp.open();
+    } catch {
+      setStatus("payerror");
     }
   };
 
@@ -238,6 +437,32 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
           {step === 1 && (
             <div className="space-y-6">
               <div>
+                <label className="text-sm font-semibold text-plum-900">{t.modeL}</label>
+                <div className="mt-3 grid grid-cols-2 gap-2.5">
+                  {([
+                    { id: "online" as const, icon: Video, label: t.modeOnline, hint: t.modeOnlineHint },
+                    { id: "visit" as const, icon: Building2, label: t.modeVisit, hint: t.modeVisitHint },
+                  ]).map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setForm((f) => ({ ...f, mode: m.id }))}
+                      className={`flex flex-col items-start gap-1 rounded-xl border px-3.5 py-3 text-left transition-all ${
+                        form.mode === m.id
+                          ? "border-coral-500 bg-coral-50 ring-1 ring-coral-500"
+                          : "border-plum-100 hover:border-coral-200"
+                      }`}
+                    >
+                      <span className={`inline-flex items-center gap-1.5 text-sm font-semibold ${form.mode === m.id ? "text-coral-700" : "text-plum-900/80"}`}>
+                        <m.icon className="h-4 w-4 shrink-0" />
+                        {m.label}
+                      </span>
+                      <span className="text-[11px] leading-snug text-plum-900/55">{m.hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
                 <label className="text-sm font-semibold text-plum-900">{t.q1}</label>
                 <div className="mt-3 grid grid-cols-2 gap-2.5">
                   {services.map((s) => (
@@ -260,14 +485,49 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 )}
               </div>
 
+              {hasDoctors && (
+                <div>
+                  <label className="text-sm font-semibold text-plum-900">{t.doctorL}</label>
+                  <div className="mt-3 space-y-2">
+                    {doctors.map((doc) => (
+                      <button
+                        key={doc.id}
+                        onClick={() => setDoctor(doc.id)}
+                        className={`flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left transition-all ${
+                          form.doctorId === doc.id
+                            ? "border-coral-500 bg-coral-50 ring-1 ring-coral-500"
+                            : "border-plum-100 hover:border-coral-200"
+                        }`}
+                      >
+                        <Stethoscope
+                          className={`h-4 w-4 shrink-0 ${form.doctorId === doc.id ? "text-coral-600" : "text-plum-900/50"}`}
+                        />
+                        <span>
+                          <span className={`block text-sm font-semibold ${form.doctorId === doc.id ? "text-coral-700" : "text-plum-900/80"}`}>
+                            {doc.name}
+                          </span>
+                          {doc.specialization && (
+                            <span className="block text-[11px] leading-snug text-plum-900/55">{doc.specialization}</span>
+                          )}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  {errors.doctorId && (
+                    <p className="mt-1.5 text-xs font-medium text-rose-500">{errors.doctorId}</p>
+                  )}
+                </div>
+              )}
+
               <div>
                 <label className="text-sm font-semibold text-plum-900">{t.dateL}</label>
                 <input
                   type="date"
                   min={todayISO()}
                   value={form.date}
-                  onChange={(e) => set("date", e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-plum-100 px-4 py-3 text-sm text-plum-900 outline-none focus:border-coral-400 focus:ring-1 focus:ring-coral-400"
+                  onChange={(e) => setDate(e.target.value)}
+                  disabled={hasDoctors && !form.doctorId}
+                  className="mt-2 w-full rounded-xl border border-plum-100 px-4 py-3 text-sm text-plum-900 outline-none focus:border-coral-400 focus:ring-1 focus:ring-coral-400 disabled:cursor-not-allowed disabled:bg-plum-50 disabled:text-plum-900/40"
                 />
                 {errors.date && (
                   <p className="mt-1.5 text-xs font-medium text-rose-500">{errors.date}</p>
@@ -276,21 +536,29 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
 
               <div>
                 <label className="text-sm font-semibold text-plum-900">{t.timeL}</label>
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      onClick={() => set("time", time)}
-                      className={`rounded-lg border px-2 py-2.5 text-sm font-medium transition-all ${
-                        form.time === time
-                          ? "border-coral-500 bg-coral-500 text-white"
-                          : "border-plum-100 text-plum-900/80 hover:border-coral-200"
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
+                {hasDoctors && !form.doctorId ? (
+                  <p className="mt-2 rounded-xl bg-cream-50 px-4 py-3 text-sm text-plum-900/55">{t.pickDoctorFirst}</p>
+                ) : slotsLoading ? (
+                  <p className="mt-2 rounded-xl bg-cream-50 px-4 py-3 text-sm text-plum-900/55">{t.slotLoading}</p>
+                ) : displaySlots.length === 0 ? (
+                  <p className="mt-2 rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-700">{t.noAvail}</p>
+                ) : (
+                  <div className="mt-2 grid grid-cols-3 gap-2">
+                    {displaySlots.map((time) => (
+                      <button
+                        key={time}
+                        onClick={() => set("time", time)}
+                        className={`rounded-lg border px-2 py-2.5 text-sm font-medium transition-all ${
+                          form.time === time
+                            ? "border-coral-500 bg-coral-500 text-white"
+                            : "border-plum-100 text-plum-900/80 hover:border-coral-200"
+                        }`}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {errors.time && (
                   <p className="mt-1.5 text-xs font-medium text-rose-500">{errors.time}</p>
                 )}
@@ -304,7 +572,17 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 <span className="font-semibold text-plum-900">
                   {services.find((s) => s.id === form.service)?.[svcLang]}
                 </span>{" "}
-                · {form.date} · {form.time}
+                · {form.mode === "online" ? t.modeOnline : t.modeVisit} · {form.date} · {form.time}
+                {form.doctorId && (
+                  <div className="mt-1 text-xs text-plum-900/60">
+                    {doctors.find((d) => d.id === form.doctorId)?.name}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between rounded-xl border border-coral-100 bg-coral-50/60 px-4 py-3">
+                <span className="text-sm font-medium text-plum-900/75">{t.feeNote}</span>
+                <span className="font-display text-base font-bold text-coral-700">₹{CONSULTATION_FEE_INR}</span>
               </div>
 
               <Field label={t.nameL} value={form.name} onChange={(v) => set("name", v)} error={errors.name} placeholder={t.namePh} />
@@ -324,6 +602,11 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
               {status === "error" && (
                 <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">
                   {t.errSubmit}
+                </p>
+              )}
+              {status === "payerror" && (
+                <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">
+                  {t.errPay}
                 </p>
               )}
             </div>
@@ -358,6 +641,28 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                   </>
                 )}
               </p>
+
+              {settledAs === "paid" && (
+                <p className="mx-auto mt-4 max-w-xs rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700">
+                  ✓ {t.paidNote}
+                </p>
+              )}
+              {settledAs === "hospital" && (
+                <p className="mx-auto mt-4 max-w-xs rounded-xl bg-amber-50 px-4 py-2.5 text-sm font-medium text-amber-700">
+                  {t.hospitalNote}
+                </p>
+              )}
+              {meetLink && (
+                <a
+                  href={meetLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mx-auto mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
+                >
+                  <Video className="h-4 w-4" /> Join Google Meet
+                </a>
+              )}
+
               <div className="mx-auto mt-5 flex max-w-xs items-center gap-2 rounded-xl bg-cream-50 px-4 py-3 text-left text-xs text-plum-900/60">
                 <Phone className="h-4 w-4 shrink-0 text-coral-600" />
                 <span>
@@ -382,20 +687,35 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
             </button>
           )}
           {step === 2 && (
-            <div className="flex gap-3">
-              <button
-                onClick={() => setStep(1)}
-                className="rounded-full border border-plum-200 px-6 py-3.5 text-sm font-semibold text-plum-800 hover:border-coral-300"
-              >
-                {t.back}
-              </button>
-              <button
-                onClick={submit}
-                disabled={status === "loading"}
-                className="flex-1 rounded-full bg-gradient-to-r from-coral-500 to-coral-600 py-3.5 text-sm font-bold text-white shadow-md transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-60"
-              >
-                {status === "loading" ? t.booking : t.confirm}
-              </button>
+            <div className="space-y-2.5">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setStep(1)}
+                  className="rounded-full border border-plum-200 px-6 py-3.5 text-sm font-semibold text-plum-800 hover:border-coral-300"
+                >
+                  {t.back}
+                </button>
+                <button
+                  onClick={payAndBook}
+                  disabled={status === "loading"}
+                  className="flex-1 rounded-full bg-gradient-to-r from-coral-500 to-coral-600 py-3.5 text-sm font-bold text-white shadow-md transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-60"
+                >
+                  {status === "loading"
+                    ? t.paying
+                    : form.mode === "online"
+                      ? t.payConfirm
+                      : t.payNow}
+                </button>
+              </div>
+              {form.mode === "visit" && (
+                <button
+                  onClick={bookPayAtHospital}
+                  disabled={status === "loading"}
+                  className="w-full rounded-full border border-plum-200 py-3 text-sm font-semibold text-plum-800 hover:border-coral-300 disabled:opacity-60"
+                >
+                  {t.payAtHospital}
+                </button>
+              )}
             </div>
           )}
           {step === 3 && (

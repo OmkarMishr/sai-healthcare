@@ -22,10 +22,10 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <Stats />
+        <Doctor />
         <About />
         <Treatments />
         <Panchkarma />
-        <Doctor />
         <WhyUs />
         <Comparison />
         <Insurance />

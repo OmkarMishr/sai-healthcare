@@ -56,52 +56,33 @@ export default function About() {
   return (
     <section id="about" className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-16 md:py-24">
-        <div className="grid items-center gap-10 lg:grid-cols-2">
-          {/* Photo */}
-          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-coral-200/50 to-plum-200/40 blur-2xl" />
-            <div className="overflow-hidden rounded-[2rem] border-4 border-white bg-plum-100 shadow-2xl shadow-plum-900/20">
-              <div className="relative aspect-[4/5] w-full">
-                <Image
-                  src="/clinic_front_view.jpeg"
-                  alt="Shri Sai Ayurvedic Panchkarma & Infertility Centre building"
-                  fill
-                  sizes="(max-width: 1024px) 90vw, 450px"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-plum-900/40 to-transparent" />
-                <p className="absolute inset-x-4 bottom-4 flex items-center gap-1.5 text-sm font-semibold text-white">
-                  <MapPin className="h-4 w-4 shrink-0" />
-                  {c.address}
-                </p>
-              </div>
-            </div>
-          </div>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-coral-500">{c.eyebrow}</p>
+          <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-plum-900 sm:text-4xl">
+            {c.titleA} <span className="text-gradient-coral">{c.titleB}</span>
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-plum-900/70">{c.p1}</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-plum-900/70">{c.p2}</p>
+          <p className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-plum-900/70">
+            <MapPin className="h-4 w-4 shrink-0 text-coral-600" />
+            {c.address}
+          </p>
 
-          {/* Text */}
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-coral-500">{c.eyebrow}</p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-plum-900 sm:text-4xl">
-              {c.titleA} <span className="text-gradient-coral">{c.titleB}</span>
-            </h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-plum-900/70">{c.p1}</p>
-            <p className="mt-3 text-[15px] leading-relaxed text-plum-900/70">{c.p2}</p>
-
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {c.facilities.map((f) => (
-                <div key={f.title} className="rounded-2xl border border-plum-100 bg-cream-50 p-4">
-                  <span className="inline-flex text-coral-600">
-                    <f.icon className="h-6 w-6" />
-                  </span>
-                  <h3 className="mt-2 font-display text-sm font-bold text-plum-900">{f.title}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-plum-900/65">{f.body}</p>
+          <div className="mt-8 grid gap-3 text-left sm:grid-cols-2">
+            {c.facilities.map((f) => (
+              <div key={f.title} className="rounded-2xl border border-plum-100 bg-cream-50 p-4">
+                <span className="inline-flex text-coral-600">
+                  <f.icon className="h-6 w-6" />
+                </span>
+                <h3 className="mt-2 font-display text-sm font-bold text-plum-900">{f.title}</h3>
+                <p className="mt-1 text-xs leading-relaxed text-plum-900/65">{f.body}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
 
         {/* Hospital photos */}
+
         <div className="mt-14 md:mt-20">
           <h3 className="text-center font-display text-2xl font-extrabold tracking-tight text-plum-900 sm:text-3xl">
             {c.galleryTitle}

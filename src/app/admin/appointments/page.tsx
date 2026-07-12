@@ -19,6 +19,9 @@ type Appt = {
   notes: string | null;
   doctor_name: string | null;
   meet_link: string | null;
+  consultation_mode: string | null;
+  payment_status: string | null;
+  payment_amount: number | null;
 };
 
 type Doctor = { id: string; name: string };
@@ -28,6 +31,12 @@ const STATUS_COLORS: Record<string, string> = {
   confirmed: "bg-emerald-100 text-emerald-700",
   completed: "bg-plum-100 text-plum-700",
   cancelled: "bg-rose-100 text-rose-600",
+};
+
+const PAYMENT_LABELS: Record<string, { label: string; cls: string }> = {
+  paid: { label: "Paid", cls: "bg-emerald-100 text-emerald-700" },
+  pay_at_hospital: { label: "At hospital", cls: "bg-amber-100 text-amber-700" },
+  unpaid: { label: "Unpaid", cls: "bg-plum-100 text-plum-600" },
 };
 
 function AppointmentsInner() {
@@ -136,6 +145,7 @@ function AppointmentsInner() {
               <th className="px-4 py-3">Date / Time</th>
               <th className="px-4 py-3">Patient</th>
               <th className="px-4 py-3">Service</th>
+              <th className="px-4 py-3">Payment</th>
               <th className="px-4 py-3">Doctor</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3 text-right">Actions</th>
@@ -144,7 +154,7 @@ function AppointmentsInner() {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-plum-900/50">
+                <td colSpan={7} className="px-4 py-8 text-center text-plum-900/50">
                   No appointments match these filters.
                 </td>
               </tr>
@@ -160,7 +170,12 @@ function AppointmentsInner() {
                   <div className="text-xs text-plum-900/60">{a.phone}</div>
                 </td>
                 <td className="px-4 py-3 text-plum-900/70">
-                  {a.service_label || "—"}
+                  <div className="flex items-center gap-1.5">
+                    {a.service_label || "—"}
+                    <span className="rounded-full bg-plum-50 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-plum-500">
+                      {a.consultation_mode === "visit" ? "Visit" : "Online"}
+                    </span>
+                  </div>
                   {a.meet_link && (
                     <a
                       href={a.meet_link}
@@ -171,6 +186,21 @@ function AppointmentsInner() {
                       <Video className="h-3.5 w-3.5" /> Join Meet
                     </a>
                   )}
+                </td>
+                <td className="px-4 py-3">
+                  {(() => {
+                    const p = PAYMENT_LABELS[a.payment_status ?? "unpaid"] ?? PAYMENT_LABELS.unpaid;
+                    return (
+                      <div>
+                        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${p.cls}`}>
+                          {p.label}
+                        </span>
+                        {a.payment_amount != null && (
+                          <div className="mt-1 text-xs text-plum-900/60">₹{a.payment_amount}</div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </td>
                 <td className="px-4 py-3">
                   <select
