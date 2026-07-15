@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone, Video, Building2, Stethoscope } from "lucide-react";
+import Image from "next/image";
+import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone, Video, Building2, Stethoscope, QrCode, Landmark, Copy, Check } from "lucide-react";
 import { useT } from "./LanguageProvider";
 import { sendAppointmentEmail } from "@/lib/email";
-import { CONSULTATION_FEE_INR } from "@/lib/pricing";
 
 type Props = {
   isOpen: boolean;
@@ -63,13 +63,26 @@ const ui = {
     successTitle: "Appointment requested!",
     callSooner: "Need us sooner? Call",
     feeNote: "Consultation fee",
-    payConfirm: `Pay ₹${CONSULTATION_FEE_INR} & Confirm`,
-    payNow: `Pay ₹${CONSULTATION_FEE_INR} now`,
+    payTitle: "Payment",
+    payHow: "How would you like to pay?",
+    payNow: "Pay now",
     payAtHospital: "Pay at hospital",
-    paying: "Opening payment…",
-    errPay: "Payment could not be completed. If any amount was deducted it will be refunded. Please try again.",
-    paidNote: `Payment of ₹${CONSULTATION_FEE_INR} received.`,
-    hospitalNote: `Please pay ₹${CONSULTATION_FEE_INR} at the hospital reception.`,
+    scanToPay: "Scan with any UPI app to pay",
+    upiIdL: "UPI ID",
+    bankL: "Bank transfer",
+    acName: "Account name",
+    acNumber: "Account number",
+    ifscL: "IFSC",
+    bankName: "Bank",
+    branchL: "Branch",
+    copy: "Copy",
+    copied: "Copied",
+    refL: "Payment reference / UTR (optional)",
+    refPh: "e.g. UPI transaction ID",
+    confirmPaid: "I've paid — Confirm",
+    confirmBooking: "Confirm appointment",
+    pendingNote: "We'll verify your payment and confirm your appointment shortly.",
+    hospitalNote: "Please pay at the hospital reception.",
   },
   hi: {
     title: "अपना अपॉइंटमेंट बुक करें",
@@ -110,35 +123,42 @@ const ui = {
     successTitle: "अपॉइंटमेंट का अनुरोध मिल गया!",
     callSooner: "जल्दी चाहिए? कॉल करें",
     feeNote: "परामर्श शुल्क",
-    payConfirm: `₹${CONSULTATION_FEE_INR} भुगतान करें व पक्का करें`,
-    payNow: `अभी ₹${CONSULTATION_FEE_INR} भुगतान करें`,
+    payTitle: "भुगतान",
+    payHow: "आप भुगतान कैसे करना चाहेंगे?",
+    payNow: "अभी भुगतान करें",
     payAtHospital: "अस्पताल में भुगतान करें",
-    paying: "भुगतान खुल रहा है…",
-    errPay: "भुगतान पूर्ण नहीं हो सका। यदि कोई राशि कटी है तो वह वापस कर दी जाएगी। कृपया पुनः प्रयास करें।",
-    paidNote: `₹${CONSULTATION_FEE_INR} का भुगतान प्राप्त हुआ।`,
-    hospitalNote: `कृपया अस्पताल रिसेप्शन पर ₹${CONSULTATION_FEE_INR} का भुगतान करें।`,
+    scanToPay: "भुगतान हेतु किसी भी UPI ऐप से स्कैन करें",
+    upiIdL: "UPI आईडी",
+    bankL: "बैंक ट्रांसफर",
+    acName: "खाता नाम",
+    acNumber: "खाता संख्या",
+    ifscL: "IFSC",
+    bankName: "बैंक",
+    branchL: "शाखा",
+    copy: "कॉपी",
+    copied: "कॉपी हुआ",
+    refL: "भुगतान संदर्भ / UTR (वैकल्पिक)",
+    refPh: "जैसे UPI ट्रांज़ैक्शन आईडी",
+    confirmPaid: "मैंने भुगतान कर दिया — पक्का करें",
+    confirmBooking: "अपॉइंटमेंट पक्का करें",
+    pendingNote: "हम आपके भुगतान की पुष्टि कर शीघ्र ही अपॉइंटमेंट निश्चित करेंगे।",
+    hospitalNote: "कृपया अस्पताल रिसेप्शन पर भुगतान करें।",
   },
 };
 
-// Razorpay checkout callback response shape.
-type RazorpayResponse = {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
+// Clinic payment details configured in the admin panel.
+type PaymentMethods = {
+  enabled: boolean;
+  amount: number | null;
+  upiId: string | null;
+  qrImage: string | null;
+  accountName: string | null;
+  accountNumber: string | null;
+  ifsc: string | null;
+  bankName: string | null;
+  branch: string | null;
+  instructions: string | null;
 };
-
-// Load the Razorpay checkout script once, on demand.
-function loadRazorpayScript(): Promise<boolean> {
-  return new Promise((resolve) => {
-    if (typeof window === "undefined") return resolve(false);
-    if ((window as unknown as { Razorpay?: unknown }).Razorpay) return resolve(true);
-    const s = document.createElement("script");
-    s.src = "https://checkout.razorpay.com/v1/checkout.js";
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.body.appendChild(s);
-  });
-}
 
 type FormState = {
   mode: "online" | "visit";
@@ -177,9 +197,9 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error" | "payerror">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   // How the confirmed booking was settled — drives the success screen copy.
-  const [settledAs, setSettledAs] = useState<"paid" | "hospital" | null>(null);
+  const [settledAs, setSettledAs] = useState<"submitted" | "hospital" | null>(null);
   const [meetLink, setMeetLink] = useState<string | null>(null);
 
   // Doctors + availability-driven time slots.
@@ -187,6 +207,12 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
   const [slots, setSlots] = useState<string[]>([]);
   const [slotsConfigured, setSlotsConfigured] = useState(true);
   const [slotsLoading, setSlotsLoading] = useState(false);
+
+  // Payment methods configured by the clinic.
+  const [pm, setPm] = useState<PaymentMethods | null>(null);
+  const [payChoice, setPayChoice] = useState<"now" | "hospital">("now");
+  const [reference, setReference] = useState("");
+  const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -198,8 +224,24 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
       setMeetLink(null);
       setSlots([]);
       setSlotsConfigured(true);
+      setPayChoice("now");
+      setReference("");
+      setCopied(null);
     }
   }, [isOpen, presetService]);
+
+  // Load clinic payment methods when the modal opens.
+  useEffect(() => {
+    if (!isOpen) return;
+    let alive = true;
+    fetch("/api/payment-methods")
+      .then((r) => r.json())
+      .then((d) => alive && setPm(d && d.enabled ? d : null))
+      .catch(() => alive && setPm(null));
+    return () => {
+      alive = false;
+    };
+  }, [isOpen]);
 
   // Load bookable doctors once the modal opens.
   useEffect(() => {
@@ -302,13 +344,24 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
     if (step === 1 && validateStep1()) setStep(2);
   };
 
-  // Persist the appointment. `payment` is present for paid bookings (its
-  // signature is re-verified server-side); `payAtHospital` marks a visit
-  // that will be settled at the reception.
-  const finalizeBooking = async (opts: {
-    payAtHospital?: boolean;
-    payment?: { orderId: string; paymentId: string; signature: string };
-  }) => {
+  // Whether the patient is paying online now (vs. paying at the hospital).
+  // Online consults always pay now; visits can choose. Only relevant when the
+  // clinic has configured payment methods.
+  const payingNow = !!pm && (form.mode === "online" || payChoice === "now");
+
+  const copyText = (key: string, text: string) => {
+    navigator.clipboard
+      ?.writeText(text)
+      .then(() => {
+        setCopied(key);
+        setTimeout(() => setCopied(null), 1500);
+      })
+      .catch(() => {});
+  };
+
+  // Persist the appointment. Patients pay by UPI/bank and the clinic confirms
+  // manually, so a booking is 'pending' unless the patient pays at the hospital.
+  const finalizeBooking = async (payAtHospital: boolean) => {
     setStatus("loading");
     try {
       const res = await fetch("/api/appointments", {
@@ -318,8 +371,8 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
           ...form,
           serviceLabel,
           consultationMode: form.mode,
-          payAtHospital: !!opts.payAtHospital,
-          payment: opts.payment ?? null,
+          payAtHospital,
+          paymentReference: payAtHospital ? "" : reference.trim(),
         }),
       });
       if (!res.ok) throw new Error("Request failed");
@@ -338,7 +391,7 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
       }).catch((err) => console.warn("Appointment email failed:", err));
 
       setMeetLink(data.meetLink ?? null);
-      setSettledAs(opts.payAtHospital ? "hospital" : "paid");
+      setSettledAs(payAtHospital ? "hospital" : "submitted");
       setStatus("success");
       setStep(3);
     } catch {
@@ -346,58 +399,10 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
     }
   };
 
-  // Visit + "pay at hospital": no online payment, book straight away.
-  const bookPayAtHospital = () => {
+  const confirm = () => {
     if (!validateStep2()) return;
-    finalizeBooking({ payAtHospital: true });
-  };
-
-  // Online, or visit + "pay now": collect the fee via Razorpay first, then
-  // finalise the booking only after the checkout succeeds.
-  const payAndBook = async () => {
-    if (!validateStep2()) return;
-    setStatus("loading");
-    try {
-      const orderRes = await fetch("/api/payments/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: form.name, phone: form.phone, service: serviceLabel }),
-      });
-      if (!orderRes.ok) throw new Error("order");
-      const order = await orderRes.json();
-
-      const ready = await loadRazorpayScript();
-      const RZP = (window as unknown as { Razorpay?: new (o: unknown) => { open: () => void; on: (e: string, cb: () => void) => void } }).Razorpay;
-      if (!ready || !RZP) throw new Error("script");
-
-      const rzp = new RZP({
-        key: order.keyId,
-        order_id: order.orderId,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Shri Sai Ayurveda",
-        description: serviceLabel || "Consultation",
-        prefill: {
-          name: form.name,
-          email: form.email || undefined,
-          contact: form.phone,
-        },
-        theme: { color: "#e26a5a" },
-        handler: (resp: RazorpayResponse) =>
-          finalizeBooking({
-            payment: {
-              orderId: resp.razorpay_order_id,
-              paymentId: resp.razorpay_payment_id,
-              signature: resp.razorpay_signature,
-            },
-          }),
-        modal: { ondismiss: () => setStatus("idle") },
-      });
-      rzp.on("payment.failed", () => setStatus("payerror"));
-      rzp.open();
-    } catch {
-      setStatus("payerror");
-    }
+    const payAtHospital = form.mode === "visit" && !!pm && payChoice === "hospital";
+    finalizeBooking(payAtHospital);
   };
 
   return (
@@ -580,10 +585,12 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 )}
               </div>
 
-              <div className="flex items-center justify-between rounded-xl border border-coral-100 bg-coral-50/60 px-4 py-3">
-                <span className="text-sm font-medium text-plum-900/75">{t.feeNote}</span>
-                <span className="font-display text-base font-bold text-coral-700">₹{CONSULTATION_FEE_INR}</span>
-              </div>
+              {pm?.amount != null && (
+                <div className="flex items-center justify-between rounded-xl border border-coral-100 bg-coral-50/60 px-4 py-3">
+                  <span className="text-sm font-medium text-plum-900/75">{t.feeNote}</span>
+                  <span className="font-display text-base font-bold text-coral-700">₹{pm.amount}</span>
+                </div>
+              )}
 
               <Field label={t.nameL} value={form.name} onChange={(v) => set("name", v)} error={errors.name} placeholder={t.namePh} />
               <Field label={t.phoneL} value={form.phone} onChange={(v) => set("phone", v)} error={errors.phone} placeholder={t.phonePh} type="tel" />
@@ -599,14 +606,84 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 />
               </div>
 
+              {/* Payment details from the clinic (admin-managed) */}
+              {pm && (
+                <div className="space-y-3 rounded-2xl border border-plum-100 bg-cream-50/60 p-4">
+                  <h4 className="flex items-center gap-1.5 font-display text-sm font-bold text-plum-900">
+                    <QrCode className="h-4 w-4 text-coral-600" /> {t.payTitle}
+                  </h4>
+
+                  {form.mode === "visit" && (
+                    <div className="grid grid-cols-2 gap-2">
+                      {(["now", "hospital"] as const).map((c) => (
+                        <button
+                          key={c}
+                          onClick={() => setPayChoice(c)}
+                          className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition-all ${
+                            payChoice === c
+                              ? "border-coral-500 bg-coral-50 text-coral-700 ring-1 ring-coral-500"
+                              : "border-plum-100 text-plum-900/70 hover:border-coral-200"
+                          }`}
+                        >
+                          {c === "now" ? t.payNow : t.payAtHospital}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {payingNow && (
+                    <div className="space-y-3">
+                      {pm.qrImage && (
+                        <div className="flex flex-col items-center gap-2 rounded-xl bg-white p-3">
+                          <div className="relative h-44 w-44">
+                            <Image src={pm.qrImage} alt="UPI QR" fill className="object-contain" unoptimized />
+                          </div>
+                          <p className="text-xs text-plum-900/55">{t.scanToPay}</p>
+                        </div>
+                      )}
+
+                      {pm.upiId && (
+                        <CopyRow label={t.upiIdL} value={pm.upiId} copied={copied === "upi"} onCopy={() => copyText("upi", pm.upiId!)} copyLabel={copied === "upi" ? t.copied : t.copy} />
+                      )}
+
+                      {pm.accountNumber && (
+                        <div className="rounded-xl bg-white p-3 text-sm">
+                          <p className="flex items-center gap-1.5 font-semibold text-plum-900">
+                            <Landmark className="h-4 w-4 text-coral-600" /> {t.bankL}
+                          </p>
+                          <dl className="mt-2 space-y-1 text-xs text-plum-900/70">
+                            {pm.accountName && <Row k={t.acName} v={pm.accountName} />}
+                            <Row k={t.acNumber} v={pm.accountNumber} />
+                            {pm.ifsc && <Row k={t.ifscL} v={pm.ifsc} />}
+                            {pm.bankName && <Row k={t.bankName} v={pm.bankName} />}
+                            {pm.branch && <Row k={t.branchL} v={pm.branch} />}
+                          </dl>
+                        </div>
+                      )}
+
+                      {pm.instructions && (
+                        <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-800">
+                          {pm.instructions}
+                        </p>
+                      )}
+
+                      <div>
+                        <label className="text-sm font-semibold text-plum-900">{t.refL}</label>
+                        <input
+                          value={reference}
+                          onChange={(e) => setReference(e.target.value)}
+                          placeholder={t.refPh}
+                          className="mt-2 w-full rounded-xl border border-plum-100 px-4 py-3 text-sm text-plum-900 outline-none focus:border-coral-400 focus:ring-1 focus:ring-coral-400"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {status === "error" && (
                 <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">
                   {t.errSubmit}
-                </p>
-              )}
-              {status === "payerror" && (
-                <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">
-                  {t.errPay}
                 </p>
               )}
             </div>
@@ -642,9 +719,9 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 )}
               </p>
 
-              {settledAs === "paid" && (
-                <p className="mx-auto mt-4 max-w-xs rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700">
-                  ✓ {t.paidNote}
+              {settledAs === "submitted" && (
+                <p className="mx-auto mt-4 max-w-xs rounded-xl bg-emerald-50 px-4 py-2.5 text-sm font-medium text-emerald-700">
+                  {t.pendingNote}
                 </p>
               )}
               {settledAs === "hospital" && (
@@ -687,35 +764,20 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
             </button>
           )}
           {step === 2 && (
-            <div className="space-y-2.5">
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setStep(1)}
-                  className="rounded-full border border-plum-200 px-6 py-3.5 text-sm font-semibold text-plum-800 hover:border-coral-300"
-                >
-                  {t.back}
-                </button>
-                <button
-                  onClick={payAndBook}
-                  disabled={status === "loading"}
-                  className="flex-1 rounded-full bg-gradient-to-r from-coral-500 to-coral-600 py-3.5 text-sm font-bold text-white shadow-md transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-60"
-                >
-                  {status === "loading"
-                    ? t.paying
-                    : form.mode === "online"
-                      ? t.payConfirm
-                      : t.payNow}
-                </button>
-              </div>
-              {form.mode === "visit" && (
-                <button
-                  onClick={bookPayAtHospital}
-                  disabled={status === "loading"}
-                  className="w-full rounded-full border border-plum-200 py-3 text-sm font-semibold text-plum-800 hover:border-coral-300 disabled:opacity-60"
-                >
-                  {t.payAtHospital}
-                </button>
-              )}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setStep(1)}
+                className="rounded-full border border-plum-200 px-6 py-3.5 text-sm font-semibold text-plum-800 hover:border-coral-300"
+              >
+                {t.back}
+              </button>
+              <button
+                onClick={confirm}
+                disabled={status === "loading"}
+                className="flex-1 rounded-full bg-gradient-to-r from-coral-500 to-coral-600 py-3.5 text-sm font-bold text-white shadow-md transition-transform hover:scale-[1.01] active:scale-95 disabled:opacity-60"
+              >
+                {status === "loading" ? t.booking : payingNow ? t.confirmPaid : t.confirmBooking}
+              </button>
             </div>
           )}
           {step === 3 && (
@@ -728,6 +790,45 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <div className="flex justify-between gap-3">
+      <dt className="text-plum-900/55">{k}</dt>
+      <dd className="text-right font-medium text-plum-900">{v}</dd>
+    </div>
+  );
+}
+
+function CopyRow({
+  label,
+  value,
+  copied,
+  onCopy,
+  copyLabel,
+}: {
+  label: string;
+  value: string;
+  copied: boolean;
+  onCopy: () => void;
+  copyLabel: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5">
+      <div className="min-w-0">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-plum-900/45">{label}</p>
+        <p className="truncate text-sm font-semibold text-plum-900">{value}</p>
+      </div>
+      <button
+        onClick={onCopy}
+        className="inline-flex shrink-0 items-center gap-1 rounded-full border border-plum-200 px-3 py-1.5 text-xs font-semibold text-plum-800 hover:border-coral-300"
+      >
+        {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+        {copyLabel}
+      </button>
     </div>
   );
 }

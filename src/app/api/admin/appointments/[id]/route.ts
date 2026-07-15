@@ -6,14 +6,18 @@ export const runtime = "nodejs";
 type Ctx = { params: Promise<{ id: string }> };
 
 const STATUSES = ["pending", "confirmed", "completed", "cancelled"];
+const PAYMENT_STATUSES = ["pending", "paid", "pay_at_hospital"];
 
-// PUT — update status / assign doctor / link patient / reschedule
+// PUT — update status / payment / assign doctor / link patient / reschedule
 export async function PUT(req: Request, { params }: Ctx) {
   const { id } = await params;
   const b = await req.json().catch(() => ({}));
 
   if (b.status && !STATUSES.includes(b.status)) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+  }
+  if (b.payment_status && !PAYMENT_STATUSES.includes(b.payment_status)) {
+    return NextResponse.json({ error: "Invalid payment status" }, { status: 400 });
   }
 
   const rows = await query(
@@ -23,8 +27,9 @@ export async function PUT(req: Request, { params }: Ctx) {
        patient_id = COALESCE($3, patient_id),
        appointment_date = COALESCE($4, appointment_date),
        appointment_time = COALESCE($5, appointment_time),
-       notes = COALESCE($6, notes)
-     WHERE id = $7 RETURNING *`,
+       notes = COALESCE($6, notes),
+       payment_status = COALESCE($7, payment_status)
+     WHERE id = $8 RETURNING *`,
     [
       b.status || null,
       b.doctor_id || null,
@@ -32,6 +37,7 @@ export async function PUT(req: Request, { params }: Ctx) {
       b.appointment_date || null,
       b.appointment_time || null,
       b.notes ?? null,
+      b.payment_status || null,
       id,
     ],
   );

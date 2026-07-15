@@ -89,26 +89,51 @@ CREATE TABLE IF NOT EXISTS appointments (
   source           TEXT        NOT NULL DEFAULT 'online',   -- online|walk-in
   meet_link        TEXT,                                    -- Google Meet URL (if generated)
   consultation_mode   TEXT     NOT NULL DEFAULT 'online',   -- online|visit
-  payment_status      TEXT     NOT NULL DEFAULT 'unpaid',   -- paid|pay_at_hospital|unpaid
+  payment_status      TEXT     NOT NULL DEFAULT 'pending',  -- pending|paid|pay_at_hospital
   payment_amount      INTEGER,                              -- consultation fee in INR
-  razorpay_order_id   TEXT,
-  razorpay_payment_id TEXT,
+  payment_reference   TEXT,                                 -- UPI/UTR ref entered by patient
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 -- for databases created before these columns existed:
 ALTER TABLE appointments ADD COLUMN IF NOT EXISTS meet_link TEXT;
 ALTER TABLE appointments ADD COLUMN IF NOT EXISTS consultation_mode   TEXT NOT NULL DEFAULT 'online';
-ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_status      TEXT NOT NULL DEFAULT 'unpaid';
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_status      TEXT NOT NULL DEFAULT 'pending';
 ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_amount      INTEGER;
-ALTER TABLE appointments ADD COLUMN IF NOT EXISTS razorpay_order_id   TEXT;
-ALTER TABLE appointments ADD COLUMN IF NOT EXISTS razorpay_payment_id TEXT;
+ALTER TABLE appointments ADD COLUMN IF NOT EXISTS payment_reference   TEXT;
+-- razorpay integration removed:
+ALTER TABLE appointments DROP COLUMN IF EXISTS razorpay_order_id;
+ALTER TABLE appointments DROP COLUMN IF EXISTS razorpay_payment_id;
 CREATE INDEX IF NOT EXISTS idx_appt_date   ON appointments (appointment_date);
 CREATE INDEX IF NOT EXISTS idx_appt_status ON appointments (status);
 CREATE INDEX IF NOT EXISTS idx_appt_patient ON appointments (patient_id);
 
 DROP TRIGGER IF EXISTS trg_appt_updated ON appointments;
 CREATE TRIGGER trg_appt_updated BEFORE UPDATE ON appointments
+  FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+-- ---------- payment settings (single row) ---------------------------
+-- The clinic's payment details shown to patients while booking:
+-- a UPI QR (stored as a base64 data URL), UPI ID and bank account.
+CREATE TABLE IF NOT EXISTS payment_settings (
+  id             INT PRIMARY KEY DEFAULT 1,
+  enabled        BOOLEAN     NOT NULL DEFAULT TRUE,
+  amount         INTEGER,                 -- consultation fee in INR (optional)
+  upi_id         TEXT,
+  qr_image       TEXT,                    -- base64 data URL of the UPI QR image
+  account_name   TEXT,
+  account_number TEXT,
+  ifsc           TEXT,
+  bank_name      TEXT,
+  branch         TEXT,
+  instructions   TEXT,
+  updated_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT payment_settings_single_row CHECK (id = 1)
+);
+INSERT INTO payment_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING;
+
+DROP TRIGGER IF EXISTS trg_payment_settings_updated ON payment_settings;
+CREATE TRIGGER trg_payment_settings_updated BEFORE UPDATE ON payment_settings
   FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- ---------- patient visit history -----------------------------------

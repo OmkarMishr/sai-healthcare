@@ -22,6 +22,7 @@ type Appt = {
   consultation_mode: string | null;
   payment_status: string | null;
   payment_amount: number | null;
+  payment_reference: string | null;
 };
 
 type Doctor = { id: string; name: string };
@@ -35,7 +36,8 @@ const STATUS_COLORS: Record<string, string> = {
 
 const PAYMENT_LABELS: Record<string, { label: string; cls: string }> = {
   paid: { label: "Paid", cls: "bg-emerald-100 text-emerald-700" },
-  pay_at_hospital: { label: "At hospital", cls: "bg-amber-100 text-amber-700" },
+  pending: { label: "Pending", cls: "bg-amber-100 text-amber-700" },
+  pay_at_hospital: { label: "At hospital", cls: "bg-plum-100 text-plum-600" },
   unpaid: { label: "Unpaid", cls: "bg-plum-100 text-plum-600" },
 };
 
@@ -79,6 +81,10 @@ function AppointmentsInner() {
 
   const setStatus = async (a: Appt, status: string) => {
     await apiSend(`/api/admin/appointments/${a.id}`, "PUT", { status });
+    load();
+  };
+  const setPayment = async (a: Appt, payment_status: string) => {
+    await apiSend(`/api/admin/appointments/${a.id}`, "PUT", { payment_status });
     load();
   };
   const assignDoctor = async (a: Appt, doctor_id: string) => {
@@ -189,7 +195,7 @@ function AppointmentsInner() {
                 </td>
                 <td className="px-4 py-3">
                   {(() => {
-                    const p = PAYMENT_LABELS[a.payment_status ?? "unpaid"] ?? PAYMENT_LABELS.unpaid;
+                    const p = PAYMENT_LABELS[a.payment_status ?? "pending"] ?? PAYMENT_LABELS.pending;
                     return (
                       <div>
                         <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${p.cls}`}>
@@ -197,6 +203,17 @@ function AppointmentsInner() {
                         </span>
                         {a.payment_amount != null && (
                           <div className="mt-1 text-xs text-plum-900/60">₹{a.payment_amount}</div>
+                        )}
+                        {a.payment_reference && (
+                          <div className="mt-0.5 text-[11px] text-plum-900/50">Ref: {a.payment_reference}</div>
+                        )}
+                        {a.payment_status !== "paid" && (
+                          <button
+                            onClick={() => setPayment(a, "paid")}
+                            className="mt-1 block text-[11px] font-semibold text-emerald-600 hover:underline"
+                          >
+                            Mark paid
+                          </button>
                         )}
                       </div>
                     );

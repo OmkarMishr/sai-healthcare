@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Users, Calendar, Stethoscope } from "lucide-react";
+import { LayoutDashboard, Users, Calendar, Stethoscope, CreditCard } from "lucide-react";
 
 const nav = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Patients", href: "/admin/patients", icon: Users },
   { label: "Appointments", href: "/admin/appointments", icon: Calendar },
   { label: "Doctors", href: "/admin/doctors", icon: Stethoscope },
+  { label: "Payments", href: "/admin/payments", icon: CreditCard },
 ];
 
 export default function AdminShell({
