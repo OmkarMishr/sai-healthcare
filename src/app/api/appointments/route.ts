@@ -44,6 +44,9 @@ export async function POST(req: Request) {
   }
 
   const email = (b.email ?? "").toString().trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  }
   const serviceLabel = (b.serviceLabel ?? "").toString().trim();
   const notes = (b.notes ?? "").toString().trim();
   const doctorId = (b.doctorId ?? b.doctor_id ?? "").toString().trim() || null;

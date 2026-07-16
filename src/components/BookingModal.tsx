@@ -44,7 +44,7 @@ const ui = {
     namePh: "e.g. Priya Sharma",
     phoneL: "Phone number *",
     phonePh: "+91 98xxxxxxxx",
-    emailL: "Email (optional)",
+    emailL: "Email *",
     emailPh: "you@example.com",
     notesL: "Anything you'd like us to know? (optional)",
     notesPh: "Briefly describe your concern or history…",
@@ -53,7 +53,8 @@ const ui = {
     errTime: "Please pick a time slot",
     errName: "Please enter your name",
     errPhone: "Enter a valid phone number",
-    errEmail: "Enter a valid email",
+    errEmail: "Please enter a valid email",
+    errRef: "Please enter the payment reference / UTR",
     errSubmit: "Something went wrong. Please try again or call us directly.",
     continue: "Continue →",
     back: "← Back",
@@ -77,7 +78,7 @@ const ui = {
     branchL: "Branch",
     copy: "Copy",
     copied: "Copied",
-    refL: "Payment reference / UTR (optional)",
+    refL: "Payment reference / UTR *",
     refPh: "e.g. UPI transaction ID",
     confirmPaid: "I've paid — Confirm",
     confirmBooking: "Confirm appointment",
@@ -104,7 +105,7 @@ const ui = {
     namePh: "जैसे प्रिया शर्मा",
     phoneL: "फ़ोन नंबर *",
     phonePh: "+91 98xxxxxxxx",
-    emailL: "ईमेल (वैकल्पिक)",
+    emailL: "ईमेल *",
     emailPh: "you@example.com",
     notesL: "कुछ बताना चाहेंगे? (वैकल्पिक)",
     notesPh: "अपनी समस्या या इतिहास संक्षेप में बताएँ…",
@@ -113,7 +114,8 @@ const ui = {
     errTime: "कृपया समय चुनें",
     errName: "कृपया अपना नाम दर्ज करें",
     errPhone: "मान्य फ़ोन नंबर दर्ज करें",
-    errEmail: "मान्य ईमेल दर्ज करें",
+    errEmail: "कृपया मान्य ईमेल दर्ज करें",
+    errRef: "कृपया भुगतान संदर्भ / UTR दर्ज करें",
     errSubmit: "कुछ गड़बड़ी हुई। कृपया पुनः प्रयास करें या हमें सीधे कॉल करें।",
     continue: "आगे बढ़ें →",
     back: "← पीछे",
@@ -137,7 +139,7 @@ const ui = {
     branchL: "शाखा",
     copy: "कॉपी",
     copied: "कॉपी हुआ",
-    refL: "भुगतान संदर्भ / UTR (वैकल्पिक)",
+    refL: "भुगतान संदर्भ / UTR *",
     refPh: "जैसे UPI ट्रांज़ैक्शन आईडी",
     confirmPaid: "मैंने भुगतान कर दिया — पक्का करें",
     confirmBooking: "अपॉइंटमेंट पक्का करें",
@@ -212,6 +214,7 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
   const [pm, setPm] = useState<PaymentMethods | null>(null);
   const [payChoice, setPayChoice] = useState<"now" | "hospital">("now");
   const [reference, setReference] = useState("");
+  const [refError, setRefError] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
@@ -226,6 +229,7 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
       setSlotsConfigured(true);
       setPayChoice("now");
       setReference("");
+      setRefError("");
       setCopied(null);
     }
   }, [isOpen, presetService]);
@@ -334,8 +338,7 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
     const e: typeof errors = {};
     if (!form.name.trim()) e.name = t.errName;
     if (!/^[+\d][\d\s-]{7,}$/.test(form.phone.trim())) e.phone = t.errPhone;
-    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      e.email = t.errEmail;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = t.errEmail;
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -400,7 +403,11 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
   };
 
   const confirm = () => {
-    if (!validateStep2()) return;
+    const okForm = validateStep2();
+    // Reference is required whenever the patient is paying online now.
+    const okRef = !payingNow || reference.trim().length > 0;
+    setRefError(okRef ? "" : t.errRef);
+    if (!okForm || !okRef) return;
     const payAtHospital = form.mode === "visit" && !!pm && payChoice === "hospital";
     finalizeBooking(payAtHospital);
   };
@@ -671,10 +678,16 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                         <label className="text-sm font-semibold text-plum-900">{t.refL}</label>
                         <input
                           value={reference}
-                          onChange={(e) => setReference(e.target.value)}
+                          onChange={(e) => {
+                            setReference(e.target.value);
+                            if (refError) setRefError("");
+                          }}
                           placeholder={t.refPh}
                           className="mt-2 w-full rounded-xl border border-plum-100 px-4 py-3 text-sm text-plum-900 outline-none focus:border-coral-400 focus:ring-1 focus:ring-coral-400"
                         />
+                        {refError && (
+                          <p className="mt-1.5 text-xs font-medium text-rose-500">{refError}</p>
+                        )}
                       </div>
                     </div>
                   )}
