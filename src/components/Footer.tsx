@@ -19,7 +19,7 @@ const content = {
     ],
     reachH: "Reach Us",
     address:
-      "158, Basant Corner, Sita Vihar Colony, Behind Shristi Plaza, Avanti Vihar, Raipur, Chhattisgarh",
+      "158, Basant Corner,Infront of V.C. Hospital, Beside Shristi Plaza, Avanti Vihar, Raipur, Chhattisgarh",
     timing: "Mon–Sat · 10 AM – 8 PM",
     rights: "All rights reserved.",
     privacy: "Privacy",
