@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useBooking } from "./BookingProvider";
 import { useT } from "./LanguageProvider";
 
-const WHATSAPP_NUMBER = "919770130255";
+const WHATSAPP_NUMBER = "919229693191";
 
 const content = {
   en: {

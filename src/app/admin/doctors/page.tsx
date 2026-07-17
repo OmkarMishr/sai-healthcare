@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { CalendarDays, Phone } from "lucide-react";
+import { CalendarDays, Phone, Trash2 } from "lucide-react";
 import AdminShell from "@/components/admin/AdminShell";
 import { apiGet, apiSend } from "@/lib/adminApi";
 
@@ -47,6 +47,16 @@ export default function DoctorsPage() {
     load();
   };
 
+  const removeDoctor = async (d: Doctor) => {
+    if (!confirm(`Remove ${d.name}? This also deletes their availability.`)) return;
+    try {
+      await apiSend(`/api/admin/doctors/${d.id}`, "DELETE");
+      load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to remove doctor");
+    }
+  };
+
   return (
     <AdminShell title="Doctors">
       <div className="mb-5 flex justify-end">
@@ -84,12 +94,22 @@ export default function DoctorsPage() {
                 {d.active ? "Active" : "Inactive"}
               </span>
             </div>
-            <button
-              onClick={() => setAvailFor(d)}
-              className="mt-4 w-full rounded-full border border-plum-200 py-2 text-sm font-semibold text-plum-800 hover:border-coral-300"
-            >
-              <span className="inline-flex items-center justify-center gap-2"><CalendarDays className="h-4 w-4" /> Manage Availability</span>
-            </button>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => setAvailFor(d)}
+                className="flex-1 rounded-full border border-plum-200 py-2 text-sm font-semibold text-plum-800 hover:border-coral-300"
+              >
+                <span className="inline-flex items-center justify-center gap-2"><CalendarDays className="h-4 w-4" /> Manage Availability</span>
+              </button>
+              <button
+                onClick={() => removeDoctor(d)}
+                aria-label={`Remove ${d.name}`}
+                title="Remove doctor"
+                className="inline-flex items-center justify-center rounded-full border border-rose-200 px-3 py-2 text-rose-600 hover:bg-rose-50"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         ))}
       </div>

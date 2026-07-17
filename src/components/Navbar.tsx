@@ -195,8 +195,8 @@ export default function Navbar() {
               >
                 {c.login}
               </Link>
-              <a href="tel:+919770130255" className="rounded-lg px-3 py-2.5 text-sm font-semibold text-coral-600">
-                Call: 097701 30255
+              <a href="tel:+919229693191" className="rounded-lg px-3 py-2.5 text-sm font-semibold text-coral-600">
+                Call: 092296 93191
               </a>
             </div>
           </div>

@@ -23,7 +23,7 @@ const content = {
       { param: "Whole-Body Health", us: "Restores overall wellness", them: "Temporary, isolated relief" },
       { param: "Cost", us: "Affordable, transparent", them: "Expensive, repeated cycles" },
     ],
-    cta: "Consult Dr. Soni — Free",
+    cta: "Consult Dr. Soni",
   },
   hi: {
     eyebrow: "हमारी तुलना",
@@ -43,7 +43,7 @@ const content = {
       { param: "संपूर्ण स्वास्थ्य", us: "समग्र स्वास्थ्य की पुनर्स्थापना", them: "अस्थायी, सीमित राहत" },
       { param: "लागत", us: "किफायती, पारदर्शी", them: "महँगे, बार-बार के चक्र" },
     ],
-    cta: "डॉ. सोनी से परामर्श — नि:शुल्क",
+    cta: "डॉ. सोनी से परामर्श",
   },
 };
 

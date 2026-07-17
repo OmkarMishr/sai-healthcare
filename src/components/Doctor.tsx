@@ -25,14 +25,14 @@ const doctors: Doctor[] = [
     en: {
       eyebrow: "Meet your Ayurvedic fertility expert",
       name: "Dr. S.S. Soni",
-      creds: "BAMS · MD · PGDHHM · Ph.D.",
+      creds: "BAMS · MD · PGDHHM",
       role: "Panchkarma & Infertility Specialist",
       p1: "Dr. S.S. Soni is a distinguished Ayurvedic practitioner with 20 years of experience, specialising in Panchkarma and the natural treatment of infertility. A proud alumnus of Pt. Shiv Shakti Lal Sharma Ayurvedic Medical College, Ratlam (Vikram University, Ujjain), he is dedicated to holistic healing through authentic Ayurveda.",
       p2: "He leads Shri Sai Ayurvedic Panchkarma & Infertility Clinic in Avanti Vihar, Raipur, and serves as HOD at Raigarh Medical College & Hospital of Ayurveda. His dedication to community health earned him recognition from the former Chief Minister of Chhattisgarh, Shri Bhupesh Baghel.",
       facts: [
         { k: "20+ years", v: "of clinical experience" },
         { k: "Panchkarma", v: "& infertility specialist" },
-        { k: "Ph.D.", v: "in Ayurveda" },
+        { k: "nadi visheshagya", v: "in Ayurveda" },
         { k: "Govt.-recognised", v: "for free health camps" },
       ],
       cta: "Consult Dr. Soni",

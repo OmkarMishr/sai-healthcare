@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { MessageCircle, Flower, User, Leaf, Flower2, Sprout, Phone, Video, Building2, Stethoscope, QrCode, Landmark, Copy, Check } from "lucide-react";
+import { Flower, User, Leaf, Flower2, Sprout, Phone, Video, Building2, Stethoscope, QrCode, Landmark, Copy, Check } from "lucide-react";
 import { useT } from "./LanguageProvider";
 import { sendAppointmentEmail } from "@/lib/email";
 
@@ -13,7 +13,6 @@ type Props = {
 };
 
 const services = [
-  { id: "consult", en: "Free Consultation", hi: "नि:शुल्क परामर्श", icon: MessageCircle },
   { id: "infertility", en: "Female Infertility", hi: "स्त्री निःसंतानता", icon: Flower },
   { id: "male", en: "Male Infertility", hi: "पुरुष निःसंतानता", icon: User },
   { id: "panchkarma", en: "Panchkarma Detox", hi: "पंचकर्म शुद्धिकरण", icon: Leaf },
@@ -757,8 +756,8 @@ export default function BookingModal({ isOpen, onClose, presetService }: Props) 
                 <Phone className="h-4 w-4 shrink-0 text-coral-600" />
                 <span>
                   {t.callSooner}{" "}
-                  <a href="tel:+919770130255" className="font-semibold text-coral-600">
-                    097701 30255
+                  <a href="tel:+919229693191" className="font-semibold text-coral-600">
+                    092296 93191
                   </a>
                 </span>
               </div>

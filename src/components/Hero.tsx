@@ -14,8 +14,7 @@ const content = {
     body: (
       <>
         Struggling to conceive? Ancient <strong>Panchkarma</strong> therapies treat the
-        root cause — not just the symptom. Led by <strong>Dr. S.S. Soni</strong> (BAMS, MD,
-        Ph.D.), we help couples conceive naturally, gently, and without IVF.
+        root cause — not just the symptom. Led by <strong>Dr. S.S. Soni & Dr. Varsha Soni</strong> (BAMS, MD), we help couples conceive naturally, gently, and without IVF.
       </>
     ),
     cta: "Book a Consultation →",

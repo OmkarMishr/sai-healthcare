@@ -47,11 +47,11 @@ export default function ClosingCta() {
             {c.cta}
           </button>
           <a
-            href="tel:+919770130255"
+            href="tel:+919229693191"
             className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-4 text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
             <Phone className="h-4 w-4" />
-            097701 30255
+            092296 93191
           </a>
         </div>
         <p className="mt-6 text-xs text-white/55">{c.trust}</p>

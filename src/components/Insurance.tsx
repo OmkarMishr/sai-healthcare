@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck, ReceiptText, FileText, HeartHandshake, Info } from "lucide-react";
+import { ShieldCheck, FileText, HeartHandshake, Info } from "lucide-react";
 import { useBooking } from "./BookingProvider";
 import { useT } from "./LanguageProvider";
 
@@ -12,7 +12,6 @@ const content = {
     sub: "We help you make the most of your health coverage so quality Ayurvedic care never feels out of reach.",
     points: [
       { icon: ShieldCheck, title: "AYUSH Insurance Support", body: "Ayurvedic & Panchkarma treatments are increasingly covered under AYUSH health-insurance policies. Our team helps you check and use your benefits." },
-      { icon: ReceiptText, title: "Cashless & Reimbursement", body: "We assist with documentation for cashless approvals and reimbursement claims wherever your insurer supports Ayurvedic care." },
       { icon: FileText, title: "Complete Paperwork Help", body: "Bills, treatment summaries and doctor certificates — we provide the records your insurance provider needs, hassle-free." },
       { icon: HeartHandshake, title: "Transparent, Fair Pricing", body: "Clear, upfront costs for every therapy and package, with affordable options for families paying out of pocket." },
     ],
@@ -26,7 +25,6 @@ const content = {
     sub: "हम आपकी स्वास्थ्य बीमा सुविधा का पूरा लाभ दिलाने में सहायता करते हैं, ताकि गुणवत्तापूर्ण आयुर्वेदिक देखभाल कभी दूर न लगे।",
     points: [
       { icon: ShieldCheck, title: "आयुष बीमा सहायता", body: "आयुर्वेदिक एवं पंचकर्म उपचार अब आयुष स्वास्थ्य बीमा पॉलिसियों में तेजी से शामिल हो रहे हैं। हमारी टीम आपके लाभ जाँचने व उपयोग करने में मदद करती है।" },
-      { icon: ReceiptText, title: "कैशलेस व प्रतिपूर्ति", body: "जहाँ आपका बीमाकर्ता आयुर्वेदिक देखभाल का समर्थन करता है, वहाँ कैशलेस स्वीकृति व रीइम्बर्समेंट दावों के दस्तावेज़ में हम सहायता करते हैं।" },
       { icon: FileText, title: "पूर्ण कागज़ी सहायता", body: "बिल, उपचार सारांश व चिकित्सक प्रमाणपत्र — आपके बीमा के लिए आवश्यक सभी दस्तावेज़ हम बिना झंझट उपलब्ध कराते हैं।" },
       { icon: HeartHandshake, title: "पारदर्शी, उचित मूल्य", body: "हर चिकित्सा व पैकेज की स्पष्ट, अग्रिम लागत — स्वयं भुगतान करने वाले परिवारों के लिए किफायती विकल्पों के साथ।" },
     ],

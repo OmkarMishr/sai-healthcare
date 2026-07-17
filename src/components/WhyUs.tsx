@@ -8,7 +8,7 @@ const content = {
     eyebrow: "Why couples choose Shri Sai Ayurveda",
     titleA: "Ancient Wisdom.",
     titleB: "Real Results.",
-    sub: "No side effects, no guesswork — just authentic Ayurveda, personally guided by Dr. S.S. Soni.",
+    sub: "No side effects, no guesswork — just authentic Ayurveda, personally guided by Dr. S.S. Soni & Dr. Varsha Soni.",
     features: [
       { title: "Root-Cause Diagnosis", body: "Through Nadi Pariksha (pulse reading) we find the true dosha imbalance behind your infertility — never a one-size-fits-all remedy.", icon: Flower2 },
       { title: "Classical Panchkarma", body: "Authentic Vamana, Virechana, Basti and Uttar Basti therapies performed with traditional precision and modern hygiene.", icon: Leaf },
